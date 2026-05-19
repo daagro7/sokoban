@@ -54,7 +54,7 @@ public class Game {
         Board.totalBoxes = boxes.size();
     }
 
-    public char adkKeyboardInput(Scanner scanner) {
+    public char addKeyboardInput(Scanner scanner) {
         String input = scanner.nextLine();
         return input.charAt(0);
     }
@@ -93,7 +93,7 @@ public class Game {
         Scanner scanner = new Scanner(System.in);
         Board.viewMap(level);
         while (Board.totalGoals != 0) {
-            char input = adkKeyboardInput(scanner);
+            char input = addKeyboardInput(scanner);
             keyboardInput(input);
             System.out.println("-------------------------------");
             Board.viewMap(level);
