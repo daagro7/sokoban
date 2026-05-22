@@ -1,7 +1,5 @@
 package es.upm.pproject.sokoban;
 
-
-
 public class Cells {
     static final int EMPTY = 0;
     static final int WALL = 1;

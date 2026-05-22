@@ -7,22 +7,19 @@ import java.util.List;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-
 public class Game {
-    
+
     static WarehouseMan wMan;
     static Board table;
     List<String> fileLines;
     ArrayList<Boxes> boxes = null;
     int totalSteps;
 
-
     public Game(int width, int height, List<String> lines) {
         table = new Board(width, height);
         boxes = new ArrayList<>();
         fileLines = lines;
     }
-
 
     public void initializeBoard() {
         Board.totalGoals = 0;
@@ -63,7 +60,7 @@ public class Game {
     }
 
     public void keyboardInput(char input) {
-        switch(input) {
+        switch (input) {
             case 'w':
                 // Move up
                 table.canWarehouseManMove(wMan.getX() - 1, wMan.getY());
@@ -106,7 +103,7 @@ public class Game {
     }
 
     public static List<String> readLevelFiles(int i) {
-        String levelPath = "src/main/java/es/upm/pproject/sokoban/Levels/Level" + i + ".txt";
+        String levelPath = "src/main/java/es/upm/pproject/sokoban/levels/Level" + i + ".txt";
         Path ruta = Path.of(levelPath);
         List<String> lineas = null;
 

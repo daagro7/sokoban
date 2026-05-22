@@ -1,0 +1,12 @@
+target/
+*.class
+*.jar
+*.war
+*.ear
+*.log
+.classpath
+.project
+.settings/
+.vscode/
+dependency-reduced-pom.xml
+.DS_Store
