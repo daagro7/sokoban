@@ -63,15 +63,17 @@ public class Game {
         return lineas;
     }
 
-    private LevelManager loadLevel(int num) {
-        List<String> levelLines = readLevelFiles(num);
-
+    public LevelManager loadLevel(int num) {
+        List<String> levelLines = null;
         try {
-            if (levelLines == null || levelLines.size() < 3) {
-                throw new IllegalArgumentException("Invalid level: " + num);
-            }
-        } catch (IllegalArgumentException e) {
-            System.out.println(e.getMessage());
+            levelLines = readLevelFiles(num);
+        } catch (Exception e) {
+            System.out.println("Error loading level: " + num);
+            System.exit(1);
+        }
+
+        if (levelLines == null || levelLines.size() < 3) {
+            System.out.println("Level error: Not enough lines in level: " + num);
             System.exit(1);
         }
 
