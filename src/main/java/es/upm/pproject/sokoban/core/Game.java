@@ -23,7 +23,7 @@ public class Game {
     private void keyboardInput(char input) {
         switch (input) {
             case 'w':
-                levelManager.moveWMan(0, -1); // ROW, COLUMN
+                levelManager.moveWMan(0, -1);
                 break;
             case 's':
                 levelManager.moveWMan(0, 1);
@@ -65,46 +65,96 @@ public class Game {
 
     private LevelManager loadLevel(int num) {
         List<String> levelLines = readLevelFiles(num);
-        String[] dimensions = levelLines.get(1).split(",");
-        int width = Integer.parseInt(dimensions[0]);
-        int height = Integer.parseInt(dimensions[1]);
+
+        try {
+            if (levelLines == null || levelLines.size() < 3) {
+                throw new IllegalArgumentException("Invalid level: " + num);
+            }
+        } catch (IllegalArgumentException e) {
+            System.out.println(e.getMessage());
+            System.exit(1);
+        }
+
+        int width = 0, height = 0;
+        try {
+            String[] dimensions = levelLines.get(1).split(",");
+            height = Integer.parseInt(dimensions[0]);
+            width = Integer.parseInt(dimensions[1]);
+        } catch (NumberFormatException | ArrayIndexOutOfBoundsException e) {
+            System.out.println("Invalid level dimensions in level: " + num);
+            System.exit(1);
+        }
+
+        if (levelLines.size() < height + 2) {
+            System.out.println("Level error: Not enough lines for the specified height in level: " + num);
+            System.exit(1);
+        }
 
         Board board = new Board(width, height);
         WarehouseMan warehouseMan = null;
-
+        int boxCount = 0;
+        boolean warehouseManFound = false;
         int totalGoals = 0;
-        for (int row = 0; row < height; row++) {
-            String line = levelLines.get(row + 2); // Skip level name and dimensions
-            for (int column = 0; column < width; column++) {
-                char cellChar = column < line.length() ? line.charAt(column) : ' ';
-                CellType cellType;
 
-                switch (cellChar) {
-                    case '+':
-                        cellType = CellType.WALL;
-                        break;
-                    case ' ':
-                        cellType = CellType.EMPTY;
-                        break;
-                    case 'W':
-                        cellType = CellType.WAREHOUSE_MAN;
-                        warehouseMan = new WarehouseMan(column, row);
-                        break;
-                    case '#':
-                        cellType = CellType.BOX;
-                        break;
-                    case '*':
-                        cellType = CellType.GOAL_POSITION;
-                        totalGoals++;
-                        break;
-                    default:
-                        cellType = CellType.ERROR;
-                        break;
+        try {
+            for (int row = 0; row < height; row++) {
+                String line = levelLines.get(row + 2); // Skip level name and dimensions
+                for (int column = 0; column < width; column++) {
+                    char cellChar = (column < line.length()) ? line.charAt(column) : ' ';
+                    CellType cellType;
 
+                    switch (cellChar) {
+                        case '+':
+                            cellType = CellType.WALL;
+                            break;
+                        case ' ':
+                            cellType = CellType.EMPTY;
+                            break;
+                        case 'W':
+                            if (warehouseManFound) {
+                                System.out.println("Level error: Multiple warehouse men found in level: " + num);
+                                System.exit(1);
+                            }
+
+                            cellType = CellType.WAREHOUSE_MAN;
+                            warehouseMan = new WarehouseMan(column, row);
+                            warehouseManFound = true;
+                            break;
+                        case '#':
+                            cellType = CellType.BOX;
+                            boxCount++;
+                            break;
+                        case '*':
+                            cellType = CellType.GOAL_POSITION;
+                            totalGoals++;
+                            break;
+                        default:
+                            cellType = CellType.ERROR;
+                            break;
+
+                    }
+
+                    board.setCell(column, row, cellType);
                 }
-
-                board.setCell(column, row, cellType);
             }
+        } catch (IndexOutOfBoundsException e) {
+            System.out.println("Level error: dimensions provided do not match the map in level: " + num);
+            System.exit(1);
+        }
+
+        if (!warehouseManFound) {
+            System.out.println("Level error: No warehouse man found in level: " + num);
+            System.exit(1);
+        }
+
+        if (boxCount != totalGoals) {
+            System.out.println("Level error: Number of boxes does not match number of goals, level: " + num);
+            System.exit(1);
+        }
+
+        if (boxCount == 0 && totalGoals == 0) {
+            System.out.println("Level error: No boxes or goals found in level: " + num);
+            System.exit(1);
         }
 
         return new LevelManager(board, warehouseMan, totalGoals);
