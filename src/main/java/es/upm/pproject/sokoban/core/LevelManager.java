@@ -19,7 +19,6 @@ public class LevelManager {
   }
 
   private void executeWManMovement(int dirX, int dirY) {
-
     int oldX = warehouseMan.getX();
     int oldY = warehouseMan.getY();
 
@@ -46,7 +45,7 @@ public class LevelManager {
       totalGoals--;
     }
 
-    board.setCellType(x + dirX, x + dirY, CellType.BOX);
+    board.setCellType(x + dirX, y + dirY, CellType.BOX);
 
     /*
      * NO change is needed to the previous cell because the warehouse man
@@ -55,9 +54,9 @@ public class LevelManager {
   }
 
   private boolean moveBox(int x, int y, int dirX, int dirY) {
-    int newRow = x + dirX;
-    int newColumn = y + dirY;
-    switch (board.getCell(newRow, newColumn).getCellType()) {
+    int newX = x + dirX;
+    int newY = y + dirY;
+    switch (board.getCell(newX, newY).getCellType()) {
       case EMPTY:
         // Move the box to the new position
         executeBoxMovement(x, y, dirX, dirY);
@@ -78,9 +77,9 @@ public class LevelManager {
   }
 
   public boolean moveWMan(int dirX, int dirY) {
-    int newRow = warehouseMan.getX() + dirX;
-    int newColumn = warehouseMan.getY() + dirY;
-    switch (board.getCell(newRow, newColumn).getCellType()) {
+    int newX = warehouseMan.getX() + dirX;
+    int newY = warehouseMan.getY() + dirY;
+    switch (board.getCell(newX, newY).getCellType()) {
       case EMPTY:
       case GOAL_POSITION:
         executeWManMovement(dirX, dirY);
@@ -88,7 +87,7 @@ public class LevelManager {
       case BOX:
         // If the box can be moved, move the box and then move the warehouse man
         // else, do nothing (the warehouse man cannot move in that direction)
-        if (moveBox(newRow, newColumn, dirX, dirY)) {
+        if (moveBox(newX, newY, dirX, dirY)) {
           // If the box was moved from a goal position, we substract one from the count of
           // boxes in goal
 
@@ -112,5 +111,9 @@ public class LevelManager {
 
   public int getStepsOnLevel() {
     return stepsOnLevel;
+  }
+
+  public Board getBoard() {
+    return board;
   }
 }

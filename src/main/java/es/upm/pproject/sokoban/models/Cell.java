@@ -14,16 +14,12 @@ public class Cell {
     boolean isGoal;
 
     public Cell(CellType cellType) {
-        updateType(cellType);
+        this.cellType = cellType;
+        this.isGoal = (cellType == CellType.GOAL_POSITION);
     }
 
     public void updateType(CellType cellType) {
         this.cellType = cellType;
-        updateGoal(this.cellType);
-    }
-
-    private void updateGoal(CellType type) {
-        this.isGoal = type == CellType.GOAL_POSITION;
     }
 
     public CellType getCellType() {
