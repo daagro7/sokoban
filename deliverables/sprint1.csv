@@ -1,0 +1,34 @@
+Issue ID,URL,Title,State,Description,Author,Author Username,Assignee,Assignee Username,Confidential,Locked,Due Date,Created At (UTC),Updated At (UTC),Closed At (UTC),Milestone,Weight,Labels,Time Estimate,Time Spent
+8,https://costa.ls.fi.upm.es/gitlab/230353/programmingproject_groupproject/-/issues/8,Scoring system,Open,"The score must be the steps it takes to finish the level.
+The movement into a wall should count as a step??","GARCÍA RODRÍGUEZ, DANIEL",230353,"","",No,No,,2026-05-08 16:26:57,2026-05-08 16:36:35,,Sprint 2,,"To Do,medium,user-story",0,0
+9,https://costa.ls.fi.upm.es/gitlab/230353/programmingproject_groupproject/-/issues/9,Undo moves,Open,"","GARCÍA RODRÍGUEZ, DANIEL",230353,"","",No,No,,2026-05-08 16:30:25,2026-05-08 16:36:43,,Sprint 2,,"To Do,medium,user-story",0,0
+10,https://costa.ls.fi.upm.es/gitlab/230353/programmingproject_groupproject/-/issues/10,Save games,Open,"","GARCÍA RODRÍGUEZ, DANIEL",230353,"","",No,No,,2026-05-08 16:32:01,2026-05-08 16:36:48,,Sprint 2,,"To Do,medium,user-story",0,0
+11,https://costa.ls.fi.upm.es/gitlab/230353/programmingproject_groupproject/-/issues/11,Load games,Open,"","GARCÍA RODRÍGUEZ, DANIEL",230353,"","",No,No,,2026-05-08 16:32:17,2026-05-08 16:36:53,,Sprint 2,,"To Do,medium,user-story",0,0
+12,https://costa.ls.fi.upm.es/gitlab/230353/programmingproject_groupproject/-/issues/12,Close program,Open,"","GARCÍA RODRÍGUEZ, DANIEL",230353,"","",No,No,,2026-05-08 16:37:39,2026-05-09 23:56:32,,Sprint 2,,"To Do,high,user-story",0,0
+13,https://costa.ls.fi.upm.es/gitlab/230353/programmingproject_groupproject/-/issues/13,Start new game,Open,"","GARCÍA RODRÍGUEZ, DANIEL",230353,"","",No,No,,2026-05-08 16:51:58,2026-05-09 23:52:32,,Sprint 2,,"To Do,medium,user-story",0,0
+18,https://costa.ls.fi.upm.es/gitlab/230353/programmingproject_groupproject/-/issues/18,Transition to a GUI,Open,"Transition from a TUI to the final GUI with the board showing:
+
+- The board
+- The level name
+- The punctuation of the level
+- The punctuation of the game","COLLADO TOMÉ, IVÁN",230347,"","",No,No,,2026-05-09 23:26:44,2026-05-09 23:51:40,,Sprint 2,,"Open,medium,user-story",0,0
+19,https://costa.ls.fi.upm.es/gitlab/230353/programmingproject_groupproject/-/issues/19,Change level visuals based on context,Open,"'- Two or more consecutive walls should have the aspect of being only one piece
+- When a box is placed in a goal position, the color of the box must change to show that it in a goal
+position","COLLADO TOMÉ, IVÁN",230347,"","",No,No,,2026-05-09 23:30:51,2026-05-09 23:50:39,,Sprint 2,,"Open,low,user-story",0,0
+20,https://costa.ls.fi.upm.es/gitlab/230353/programmingproject_groupproject/-/issues/20,Game menu,Open,"The game menu of the application must allow the user to:
+- Start a new game, that is, reset the game and starts again from the first level
+- Restart the current level
+- Undo the last movement
+- Save the game
+- Open a saved game
+- Close the application","COLLADO TOMÉ, IVÁN",230347,"","",No,No,,2026-05-09 23:50:09,2026-05-09 23:50:31,,Sprint 2,,"To Do,medium,user-story",0,0
+22,https://costa.ls.fi.upm.es/gitlab/230353/programmingproject_groupproject/-/issues/22,Add 2+ levels,Open,"","COLLADO TOMÉ, IVÁN",230347,"","",No,No,,2026-05-09 23:55:17,2026-05-09 23:55:17,,Sprint 2,,"Open,medium,user-story",0,0
+23,https://costa.ls.fi.upm.es/gitlab/230353/programmingproject_groupproject/-/issues/23,Go to next level when winning one,Open,Go to next level if avaiable,"COLLADO TOMÉ, IVÁN",230347,"","",No,No,,2026-05-09 23:59:08,2026-05-09 23:59:40,,Sprint 2,,"Open,medium,user-story",0,0
+24,https://costa.ls.fi.upm.es/gitlab/230353/programmingproject_groupproject/-/issues/24,Victory message when finishing,Open,When there are no more levels show a congratulations message with the punctuation of the run,"COLLADO TOMÉ, IVÁN",230347,"","",No,No,,2026-05-10 00:01:12,2026-05-10 00:01:12,,Sprint 2,,"Open,low,user-story",0,0
+26,https://costa.ls.fi.upm.es/gitlab/230353/programmingproject_groupproject/-/issues/26,Unit tests for first version,Open,"","COLLADO TOMÉ, IVÁN",230347,"","",No,No,,2026-05-10 00:26:54,2026-05-26 14:32:20,,Sprint 2,,"To Do,medium,work-item",0,0
+27,https://costa.ls.fi.upm.es/gitlab/230353/programmingproject_groupproject/-/issues/27,Unit tests for final version,Open,"","COLLADO TOMÉ, IVÁN",230347,"","",No,No,,2026-05-10 00:27:16,2026-05-10 00:30:55,,Sprint 2,,"To Do,low,work-item",0,0
+29,https://costa.ls.fi.upm.es/gitlab/230353/programmingproject_groupproject/-/issues/29,Logs for final version,Open,"","COLLADO TOMÉ, IVÁN",230347,"","",No,No,,2026-05-10 00:31:30,2026-05-10 00:31:36,,Sprint 2,,"To Do,low,work-item",0,0
+30,https://costa.ls.fi.upm.es/gitlab/230353/programmingproject_groupproject/-/issues/30,Setup SonarQube,Open,"","COLLADO TOMÉ, IVÁN",230347,"","",No,No,,2026-05-10 00:42:19,2026-05-26 14:32:09,,Sprint 2,,"To Do,low,work-item",0,0
+31,https://costa.ls.fi.upm.es/gitlab/230353/programmingproject_groupproject/-/issues/31,Setup JUnit,Open,"","COLLADO TOMÉ, IVÁN",230347,"","",No,No,,2026-05-10 00:43:20,2026-05-26 14:31:52,,Sprint 2,,"To Do,medium,work-item",0,0
+32,https://costa.ls.fi.upm.es/gitlab/230353/programmingproject_groupproject/-/issues/32,Setup CI,Open,"","COLLADO TOMÉ, IVÁN",230347,"","",No,No,,2026-05-10 00:43:57,2026-05-26 14:31:33,,Sprint 2,,"To Do,low,work-item",0,0
+33,https://costa.ls.fi.upm.es/gitlab/230353/programmingproject_groupproject/-/issues/33,Setup README.md file,Open,"","COLLADO TOMÉ, IVÁN",230347,"","",No,No,,2026-05-10 00:44:16,2026-05-26 14:32:25,,Sprint 2,,"To Do,medium,work-item",0,0
