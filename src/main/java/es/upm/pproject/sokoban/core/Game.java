@@ -20,6 +20,7 @@ public class Game {
     private int currentLevel;
 
     public Game(int startingLevel) {
+        logger.info("Starting Sokoban game from level: {}", startingLevel);
         levelManager = loadLevel(startingLevel);
         currentLevel = startingLevel;
     }
@@ -57,7 +58,7 @@ public class Game {
             lineas = Files.readAllLines(ruta);
 
         } catch (IOException e) {
-            e.printStackTrace();
+            logger.error("Failed to read level file at path: {}", levelPath, e);
         }
 
         return lineas;
@@ -68,12 +69,12 @@ public class Game {
         try {
             levelLines = readLevelFiles(num);
         } catch (Exception e) {
-            logger.error("Error loading level: " + num);
+            logger.error("Error loading level: {}", num, e);
             System.exit(1);
         }
 
         if (levelLines == null || levelLines.size() < 3) {
-            logger.error("Level error: Not enough lines in level: " + num);
+            logger.error("Level error: Not enough lines in level: {}", num);
             System.exit(1);
         }
 
@@ -83,12 +84,12 @@ public class Game {
             height = Integer.parseInt(dimensions[0]);
             width = Integer.parseInt(dimensions[1]);
         } catch (NumberFormatException | ArrayIndexOutOfBoundsException e) {
-            logger.error("Invalid level dimensions in level: " + num);
+            logger.error("Invalid level dimensions in level: {}", num, e);
             System.exit(1);
         }
 
         if (levelLines.size() < height + 2) {
-            logger.error("Level error: Not enough lines for the specified height in level: " + num);
+            logger.error("Level error: Not enough lines for the specified height ({}) in level: {}", height, num);
             System.exit(1);
         }
 
@@ -114,7 +115,7 @@ public class Game {
                             break;
                         case 'W':
                             if (warehouseManFound) {
-                                logger.error("Level error: Multiple warehouse men found in level: " + num);
+                                logger.error("Level error: Multiple warehouse men found in level: {}", num);
                                 System.exit(1);
                             }
 
@@ -131,6 +132,7 @@ public class Game {
                             totalGoals++;
                             break;
                         default:
+                            logger.error("Level error: Invalid character '{}' found at row {}, column {} in level: {}", cellChar, row, column, num);
                             cellType = CellType.ERROR;
                             break;
 
@@ -140,25 +142,26 @@ public class Game {
                 }
             }
         } catch (IndexOutOfBoundsException e) {
-            logger.error("Level error: dimensions provided do not match the map in level: " + num);
+            logger.error("Level error: dimensions provided do not match the map in level: {}", num);
             System.exit(1);
         }
 
         if (!warehouseManFound) {
-            logger.error("Level error: No warehouse man found in level: " + num);
+            logger.error("Level error: No warehouse man found in level: {}", num);
             System.exit(1);
         }
 
         if (boxCount != totalGoals) {
-            logger.error("Level error: Number of boxes does not match number of goals, level: " + num);
+            logger.error("Level error: Number of boxes does not match number of goals, level: {}", num);
             System.exit(1);
         }
 
         if (boxCount == 0 && totalGoals == 0) {
-            logger.error("Level error: No boxes or goals found in level: " + num);
+            logger.error("Level error: No boxes or goals found in level: {}", num);
             System.exit(1);
         }
 
+        logger.info("Level {} successfully loaded. Dimensions: {}x{}. Total boxes/goals: {}", num, width, height, totalGoals);
         return new LevelManager(board, warehouseMan, totalGoals);
     }
 
@@ -173,6 +176,7 @@ public class Game {
             System.out.println(levelManager.getBoard());
         }
 
+        logger.info("Level {} successfully completed in {} steps!", currentLevel, levelManager.getStepsOnLevel());
         System.out.println(
                 "Congratulations! You've completed the level in " + levelManager.getStepsOnLevel() + " steps.");
         scanner.close();
