@@ -4,7 +4,11 @@ import es.upm.pproject.sokoban.models.Board;
 import es.upm.pproject.sokoban.models.WarehouseMan;
 import es.upm.pproject.sokoban.models.Cell.CellType;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class LevelManager {
+  private static final Logger logger = LoggerFactory.getLogger(LevelManager.class);
   Board board;
   WarehouseMan warehouseMan;
   int totalGoals;
@@ -63,9 +67,11 @@ public class LevelManager {
         return true;
       case WALL:
         // Cannot move the box this way
+        logger.warn("Cannot move box: Destination cell ({}, {}) is a WALL.", newX, newY);
         return false;
       case BOX:
         // Cannot move the box this way
+        logger.warn("Cannot move box: Destination cell ({}, {}) is already occupied by another box.", newX, newY);
         return false;
       case GOAL_POSITION:
         // Move the box to the goal position
@@ -95,9 +101,10 @@ public class LevelManager {
           executeWManMovement(dirX, dirY);
           return true;
         }
-
+        logger.warn("Cannot move warehouse man: Destination cell ({}, {}) is occupied by a box.", newX, newY);
         return false;
       case WALL:
+        logger.warn("Cannot move warehouse man: Destination cell ({}, {}) is a WALL.", newX, newY);
         return false;
       default:
         return false;
