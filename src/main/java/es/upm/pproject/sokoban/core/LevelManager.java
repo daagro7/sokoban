@@ -35,6 +35,7 @@ public class LevelManager {
     board.setCellType(oldX + dirX, oldY + dirY, CellType.WAREHOUSE_MAN);
     warehouseMan.move(dirX, dirY);
     stepsOnLevel++;
+    logger.debug("Warehouse man steps updated: {}", stepsOnLevel);
   }
 
   // This method moves the box to the given position
@@ -43,10 +44,12 @@ public class LevelManager {
 
     if (board.getCell(x, y).isGoal()) {
       totalGoals++;
+      logger.info("A box was moved out of a goal position. Remaining goals: {}", totalGoals);
     }
 
     if (board.getCell(x + dirX, y + dirY).isGoal()) {
       totalGoals--;
+      logger.info("A box was moved into a goal position. Remaining goals: {}", totalGoals);
     }
 
     board.setCellType(x + dirX, y + dirY, CellType.BOX);
@@ -85,10 +88,12 @@ public class LevelManager {
   public boolean moveWMan(int dirX, int dirY) {
     int newX = warehouseMan.getX() + dirX;
     int newY = warehouseMan.getY() + dirY;
+    String direction = getDirectionName(dirX, dirY);
     switch (board.getCell(newX, newY).getCellType()) {
       case EMPTY:
       case GOAL_POSITION:
         executeWManMovement(dirX, dirY);
+        logger.debug("Warehouse man moved to the {}", direction);
         return true;
       case BOX:
         // If the box can be moved, move the box and then move the warehouse man
@@ -99,6 +104,7 @@ public class LevelManager {
 
           // Move the warehouse man to the new position
           executeWManMovement(dirX, dirY);
+          logger.info("Warehouse man successfully pushed a box to the {}", direction);
           return true;
         }
         logger.warn("Cannot move warehouse man: Destination cell ({}, {}) is occupied by a box.", newX, newY);
@@ -109,6 +115,15 @@ public class LevelManager {
       default:
         return false;
     }
+  }
+
+  //Converts directional movement coordinates into a readable string for the logger
+  private String getDirectionName(int dirX, int dirY) {
+    if (dirX == 0 && dirY == -1) return "UP";
+    if (dirX == 0 && dirY == 1) return "DOWN";
+    if (dirX == -1 && dirY == 0) return "LEFT";
+    if (dirX == 1 && dirY == 0) return "RIGHT";
+    return "UNKNOWN";
   }
 
   // Getters
