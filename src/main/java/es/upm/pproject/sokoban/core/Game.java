@@ -4,6 +4,9 @@ import es.upm.pproject.sokoban.models.Cell.CellType;
 import es.upm.pproject.sokoban.models.WarehouseMan;
 import es.upm.pproject.sokoban.models.Board;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -12,6 +15,7 @@ import java.util.Scanner;
 
 public class Game {
 
+    private static final Logger logger = LoggerFactory.getLogger(Game.class);
     private LevelManager levelManager;
     private int currentLevel;
 
@@ -36,14 +40,10 @@ public class Game {
                 break;
             case 'r':
                 levelManager = loadLevel(currentLevel);
-                System.out.println("-------------------------------");
-                System.out.println("Level restarted.");
-                System.out.println("-------------------------------");
+                logger.info("Level restarted.");
                 break;
             default:
-                System.out.println("-------------------------------");
-                System.out.println("Invalid input.");
-                System.out.println("-------------------------------");
+                logger.warn("Invalid input.");
         }
     }
 
@@ -68,12 +68,12 @@ public class Game {
         try {
             levelLines = readLevelFiles(num);
         } catch (Exception e) {
-            System.out.println("Error loading level: " + num);
+            logger.error("Error loading level: " + num);
             System.exit(1);
         }
 
         if (levelLines == null || levelLines.size() < 3) {
-            System.out.println("Level error: Not enough lines in level: " + num);
+            logger.error("Level error: Not enough lines in level: " + num);
             System.exit(1);
         }
 
@@ -83,12 +83,12 @@ public class Game {
             height = Integer.parseInt(dimensions[0]);
             width = Integer.parseInt(dimensions[1]);
         } catch (NumberFormatException | ArrayIndexOutOfBoundsException e) {
-            System.out.println("Invalid level dimensions in level: " + num);
+            logger.error("Invalid level dimensions in level: " + num);
             System.exit(1);
         }
 
         if (levelLines.size() < height + 2) {
-            System.out.println("Level error: Not enough lines for the specified height in level: " + num);
+            logger.error("Level error: Not enough lines for the specified height in level: " + num);
             System.exit(1);
         }
 
@@ -114,7 +114,7 @@ public class Game {
                             break;
                         case 'W':
                             if (warehouseManFound) {
-                                System.out.println("Level error: Multiple warehouse men found in level: " + num);
+                                logger.error("Level error: Multiple warehouse men found in level: " + num);
                                 System.exit(1);
                             }
 
@@ -140,22 +140,22 @@ public class Game {
                 }
             }
         } catch (IndexOutOfBoundsException e) {
-            System.out.println("Level error: dimensions provided do not match the map in level: " + num);
+            logger.error("Level error: dimensions provided do not match the map in level: " + num);
             System.exit(1);
         }
 
         if (!warehouseManFound) {
-            System.out.println("Level error: No warehouse man found in level: " + num);
+            logger.error("Level error: No warehouse man found in level: " + num);
             System.exit(1);
         }
 
         if (boxCount != totalGoals) {
-            System.out.println("Level error: Number of boxes does not match number of goals, level: " + num);
+            logger.error("Level error: Number of boxes does not match number of goals, level: " + num);
             System.exit(1);
         }
 
         if (boxCount == 0 && totalGoals == 0) {
-            System.out.println("Level error: No boxes or goals found in level: " + num);
+            logger.error("Level error: No boxes or goals found in level: " + num);
             System.exit(1);
         }
 
