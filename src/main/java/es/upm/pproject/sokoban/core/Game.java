@@ -18,6 +18,7 @@ public class Game {
     private static final Logger logger = LoggerFactory.getLogger(Game.class);
     private LevelManager levelManager;
     private int currentLevel;
+    private int stepsOnGame;
 
     public Game() {
         logger.info("Starting Sokoban game from level: {}", 1);
@@ -183,7 +184,9 @@ public class Game {
             System.out.println(
                     "Congratulations! You've completed the level " + currentLevel + " in " + levelManager.getStepsOnLevel() + " steps.");
             currentLevel++;
+            stepsOnGame += levelManager.getStepsOnLevel();
         }
+        System.out.println("Congratulations! You've completed all the levels in the game in " + stepsOnGame);
         scanner.close();
     }
 }
