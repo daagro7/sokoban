@@ -19,10 +19,9 @@ public class Game {
     private LevelManager levelManager;
     private int currentLevel;
 
-    public Game(int startingLevel) {
-        logger.info("Starting Sokoban game from level: {}", startingLevel);
-        levelManager = loadLevel(startingLevel);
-        currentLevel = startingLevel;
+    public Game() {
+        logger.info("Starting Sokoban game from level: {}", 1);
+        currentLevel = 1;
     }
 
     private void keyboardInput(char input) {
@@ -167,18 +166,24 @@ public class Game {
 
     public void loop() {
         Scanner scanner = new Scanner(System.in);
-        System.out.println(levelManager.getBoard());
-        while (levelManager.getTotalGoals() > 0) {
-            System.out.println("Enter your move (w/a/s/d to move, r to restart) > ");
-            String input = scanner.nextLine();
-            keyboardInput(input.isEmpty() ? ' ' : input.charAt(0));
+        while (currentLevel < 6) {
+            System.out.println("Loading level " + currentLevel + "...");
             System.out.println("-------------------------------");
+            levelManager = loadLevel(currentLevel);
             System.out.println(levelManager.getBoard());
-        }
+            while (levelManager.getTotalGoals() > 0) {
+                System.out.println("Enter your move (w/a/s/d to move, r to restart) > ");
+                String input = scanner.nextLine();
+                keyboardInput(input.isEmpty() ? ' ' : input.charAt(0));
+                System.out.println("-------------------------------");
+                System.out.println(levelManager.getBoard());
+            }
 
-        logger.info("Level {} successfully completed in {} steps!", currentLevel, levelManager.getStepsOnLevel());
-        System.out.println(
-                "Congratulations! You've completed the level in " + levelManager.getStepsOnLevel() + " steps.");
+            logger.info("Level {} successfully completed in {} steps!", currentLevel, levelManager.getStepsOnLevel());
+            System.out.println(
+                    "Congratulations! You've completed the level " + currentLevel + " in " + levelManager.getStepsOnLevel() + " steps.");
+            currentLevel++;
+        }
         scanner.close();
     }
 }
