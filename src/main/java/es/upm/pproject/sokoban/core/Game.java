@@ -3,6 +3,8 @@ package es.upm.pproject.sokoban.core;
 import es.upm.pproject.sokoban.models.Cell.CellType;
 import es.upm.pproject.sokoban.models.WarehouseMan;
 import es.upm.pproject.sokoban.models.Board;
+// import es.upm.pproject.sokoban.models.State;
+// import es.upm.pproject.sokoban.models.PosChange;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -43,7 +45,11 @@ public class Game {
                 levelManager = loadLevel(currentLevel);
                 logger.info("Level restarted.");
                 break;
+            case 'u':
+                levelManager.undoMovement();
+                break;
             default:
+                System.out.println("Invalid input");
                 logger.warn("Invalid input.");
         }
     }

@@ -95,7 +95,7 @@ public class LevelManager {
   public boolean moveWMan(int dirX, int dirY) {
     int newX = warehouseMan.getX() + dirX;
     int newY = warehouseMan.getY() + dirY;
-    PosChange posWMan = new PosChange(dirX, dirY, newX, newY);
+    PosChange posWMan = new PosChange(warehouseMan.getX(), warehouseMan.getY(), newX, newY);
     String direction = getDirectionName(dirX, dirY);
     switch (board.getCell(newX, newY).getCellType()) {
       case EMPTY:
@@ -112,7 +112,7 @@ public class LevelManager {
           // If the box was moved from a goal position, we substract one from the count of
           // boxes in goal
 
-          PosChange posBox = new PosChange(dirX, dirY, dirX+newX, dirY+newY);
+          PosChange posBox = new PosChange(newX, newY, dirX+newX, dirY+newY);
           State stateWManBox = new State(posWMan, posBox);
           // Move the warehouse man to the new position
           executeWManMovement(dirX, dirY);
@@ -127,6 +127,42 @@ public class LevelManager {
         return false;
       default:
         return false;
+    }
+  }
+
+  public void undoMovement() {
+    State state = getPrevState();
+    if (state != null) {
+      PosChange posWMan = state.getWMan();
+      if (board.getCell(posWMan.getNextX(), posWMan.getNextY()).isGoal()) {
+        board.setCellType(posWMan.getNextX(), posWMan.getNextY(), CellType.GOAL_POSITION);
+      } else {
+        board.setCellType(posWMan.getNextX(), posWMan.getNextY(), CellType.EMPTY);
+      }
+
+      board.setCellType(posWMan.getPreviousX(), posWMan.getPreviousY(), CellType.WAREHOUSE_MAN);
+      warehouseMan.setPosition(posWMan.getPreviousX(), posWMan.getPreviousY());
+      stepsOnLevel--;
+      logger.info("Warehouse man steps updated: {}", stepsOnLevel);
+
+      PosChange posBox = state.getBox();
+      if (posBox != null) {
+
+        if (board.getCell(posBox.getNextX(), posBox.getNextY()).isGoal()) {
+          totalGoals++;
+          board.setCellType(posBox.getNextX(), posBox.getNextY(), CellType.GOAL_POSITION);
+          logger.info("A box was moved out of a goal position. Remaining goals: {}", totalGoals);
+        } else {
+          board.setCellType(posBox.getNextX(), posBox.getNextY(), CellType.EMPTY);
+        }
+
+        if (board.getCell(posBox.getPreviousX(), posBox.getPreviousY()).isGoal()) {
+          totalGoals--;
+          logger.info("A box was moved into a goal position. Remaining goals: {}", totalGoals);
+        }
+
+        board.setCellType(posBox.getPreviousX(), posBox.getPreviousY(), CellType.BOX);
+      }
     }
   }
 
@@ -150,5 +186,14 @@ public class LevelManager {
 
   public Board getBoard() {
     return board;
+  }
+
+  public State getPrevState() {
+    if (movementHistory.peek() == null) {
+      System.out.println("No movement have been done previously at this level");
+      logger.info("No movement have been done previously at this level");
+      return null;
+    }
+    return movementHistory.pop();
   }
 }
