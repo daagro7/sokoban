@@ -41,8 +41,6 @@ public class LevelManager {
 
     board.setCellType(oldX + dirX, oldY + dirY, CellType.WAREHOUSE_MAN);
     warehouseMan.move(dirX, dirY);
-    stepsOnLevel++;
-    logger.debug("Warehouse man steps updated: {}", stepsOnLevel);
   }
 
   // This method moves the box to the given position
@@ -72,8 +70,10 @@ public class LevelManager {
     int newY = y + dirY;
     switch (board.getCell(newX, newY).getCellType()) {
       case EMPTY:
+      case GOAL_POSITION:
         // Move the box to the new position
         executeBoxMovement(x, y, dirX, dirY);
+
         return true;
       case WALL:
         // Cannot move the box this way
@@ -83,10 +83,6 @@ public class LevelManager {
         // Cannot move the box this way
         logger.warn("Cannot move box: Destination cell ({}, {}) is already occupied by another box.", newX, newY);
         return false;
-      case GOAL_POSITION:
-        // Move the box to the goal position
-        executeBoxMovement(x, y, dirX, dirY);
-        return true;
       default:
         return false;
     }
@@ -102,6 +98,8 @@ public class LevelManager {
       case GOAL_POSITION:
         State stateWMan = new State(posWMan);
         executeWManMovement(dirX, dirY);
+        stepsOnLevel++;
+        logger.debug("Warehouse man steps updated: {}", stepsOnLevel);
         logger.debug("Warehouse man moved to the {}", direction);
         movementHistory.push(stateWMan);
         return true;
@@ -112,10 +110,12 @@ public class LevelManager {
           // If the box was moved from a goal position, we substract one from the count of
           // boxes in goal
 
-          PosChange posBox = new PosChange(newX, newY, dirX+newX, dirY+newY);
+          PosChange posBox = new PosChange(newX, newY, dirX + newX, dirY + newY);
           State stateWManBox = new State(posWMan, posBox);
           // Move the warehouse man to the new position
           executeWManMovement(dirX, dirY);
+          stepsOnLevel++;
+          logger.debug("Warehouse man steps updated: {}", stepsOnLevel);
           logger.info("Warehouse man successfully pushed a box to the {}", direction);
           movementHistory.push(stateWManBox);
           return true;
@@ -132,46 +132,41 @@ public class LevelManager {
 
   public void undoMovement() {
     State state = getPrevState();
-    if (state != null) {
-      PosChange posWMan = state.getWMan();
-      if (board.getCell(posWMan.getNextX(), posWMan.getNextY()).isGoal()) {
-        board.setCellType(posWMan.getNextX(), posWMan.getNextY(), CellType.GOAL_POSITION);
-      } else {
-        board.setCellType(posWMan.getNextX(), posWMan.getNextY(), CellType.EMPTY);
-      }
+    if (state == null) {
+      return;
+    }
 
-      board.setCellType(posWMan.getPreviousX(), posWMan.getPreviousY(), CellType.WAREHOUSE_MAN);
-      warehouseMan.setPosition(posWMan.getPreviousX(), posWMan.getPreviousY());
-      stepsOnLevel--;
-      logger.info("Warehouse man steps updated: {}", stepsOnLevel);
+    PosChange posWMan = state.getWMan();
+    int reverseDirX = posWMan.getPreviousX() - posWMan.getNextX();
+    int reverseDirY = posWMan.getPreviousY() - posWMan.getNextY();
+    executeWManMovement(reverseDirX, reverseDirY);
+    stepsOnLevel -= 1;
+    logger.info("Warehouse man steps updated: {}", stepsOnLevel);
 
-      PosChange posBox = state.getBox();
-      if (posBox != null) {
+    PosChange posBox = state.getBox();
+    if (posBox != null) {
+      int reverseBoxDirX = posBox.getPreviousX() - posBox.getNextX();
+      int reverseBoxDirY = posBox.getPreviousY() - posBox.getNextY();
+      executeBoxMovement(posBox.getNextX(), posBox.getNextY(), reverseBoxDirX, reverseBoxDirY);
 
-        if (board.getCell(posBox.getNextX(), posBox.getNextY()).isGoal()) {
-          totalGoals++;
-          board.setCellType(posBox.getNextX(), posBox.getNextY(), CellType.GOAL_POSITION);
-          logger.info("A box was moved out of a goal position. Remaining goals: {}", totalGoals);
-        } else {
-          board.setCellType(posBox.getNextX(), posBox.getNextY(), CellType.EMPTY);
-        }
+      // After moving the box back, update the cell type of the previous box position
+      board.setCellType(posBox.getNextX(), posBox.getNextY(),
+          board.getCell(posBox.getNextX(), posBox.getNextY()).isGoal() ? CellType.GOAL_POSITION : CellType.EMPTY);
 
-        if (board.getCell(posBox.getPreviousX(), posBox.getPreviousY()).isGoal()) {
-          totalGoals--;
-          logger.info("A box was moved into a goal position. Remaining goals: {}", totalGoals);
-        }
-
-        board.setCellType(posBox.getPreviousX(), posBox.getPreviousY(), CellType.BOX);
-      }
     }
   }
 
-  //Converts directional movement coordinates into a readable string for the logger
+  // Converts directional movement coordinates into a readable string for the
+  // logger
   private String getDirectionName(int dirX, int dirY) {
-    if (dirX == 0 && dirY == -1) return "UP";
-    if (dirX == 0 && dirY == 1) return "DOWN";
-    if (dirX == -1 && dirY == 0) return "LEFT";
-    if (dirX == 1 && dirY == 0) return "RIGHT";
+    if (dirX == 0 && dirY == -1)
+      return "UP";
+    if (dirX == 0 && dirY == 1)
+      return "DOWN";
+    if (dirX == -1 && dirY == 0)
+      return "LEFT";
+    if (dirX == 1 && dirY == 0)
+      return "RIGHT";
     return "UNKNOWN";
   }
 
