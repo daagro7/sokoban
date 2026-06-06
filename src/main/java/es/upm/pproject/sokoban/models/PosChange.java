@@ -6,7 +6,10 @@ public class PosChange {
 
 
     public PosChange(int prevX, int prevY, int nextX, int nextY) {
-
+        this.previous_x = prevX;
+        this.previous_y = prevY;
+        this.next_x = nextX;
+        this.next_y = nextY;
     }
 
     public int getPreviousX() {
