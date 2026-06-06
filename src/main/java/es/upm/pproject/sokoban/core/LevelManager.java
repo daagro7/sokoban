@@ -1,8 +1,13 @@
 package es.upm.pproject.sokoban.core;
 
 import es.upm.pproject.sokoban.models.Board;
+import es.upm.pproject.sokoban.models.PosChange;
+import es.upm.pproject.sokoban.models.State;
 import es.upm.pproject.sokoban.models.WarehouseMan;
 import es.upm.pproject.sokoban.models.Cell.CellType;
+
+import java.util.Deque;
+import java.util.ArrayDeque;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -14,12 +19,14 @@ public class LevelManager {
   int totalGoals;
   // int totalBoxes;
   int stepsOnLevel;
+  Deque<State> movementHistory;
 
   public LevelManager(Board board, WarehouseMan warehouseMan, int totalGoals) {
     this.totalGoals = totalGoals;
     this.stepsOnLevel = 0;
     this.board = board;
     this.warehouseMan = warehouseMan;
+    this.movementHistory = new ArrayDeque<>();
   }
 
   private void executeWManMovement(int dirX, int dirY) {
@@ -88,12 +95,15 @@ public class LevelManager {
   public boolean moveWMan(int dirX, int dirY) {
     int newX = warehouseMan.getX() + dirX;
     int newY = warehouseMan.getY() + dirY;
+    PosChange posWMan = new PosChange(dirX, dirY, newX, newY);
     String direction = getDirectionName(dirX, dirY);
     switch (board.getCell(newX, newY).getCellType()) {
       case EMPTY:
       case GOAL_POSITION:
+        State stateWMan = new State(posWMan);
         executeWManMovement(dirX, dirY);
         logger.debug("Warehouse man moved to the {}", direction);
+        movementHistory.push(stateWMan);
         return true;
       case BOX:
         // If the box can be moved, move the box and then move the warehouse man
@@ -102,9 +112,12 @@ public class LevelManager {
           // If the box was moved from a goal position, we substract one from the count of
           // boxes in goal
 
+          PosChange posBox = new PosChange(dirX, dirY, dirX+newX, dirY+newY);
+          State stateWManBox = new State(posWMan, posBox);
           // Move the warehouse man to the new position
           executeWManMovement(dirX, dirY);
           logger.info("Warehouse man successfully pushed a box to the {}", direction);
+          movementHistory.push(stateWManBox);
           return true;
         }
         logger.warn("Cannot move warehouse man: Destination cell ({}, {}) is occupied by a box.", newX, newY);
