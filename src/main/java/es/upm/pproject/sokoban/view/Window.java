@@ -1,7 +1,5 @@
 package es.upm.pproject.sokoban.view;
 
-import es.upm.pproject.sokoban.models.*;
-
 import javax.swing.JFrame;
 
 public class Window extends JFrame {
@@ -26,7 +24,7 @@ public class Window extends JFrame {
         this.setVisible(true);
     }
 
-    public void setBoard(Board board){
-        panel.setBoard(board);
+    public Panel getPanel() {
+        return panel;
     }
 }

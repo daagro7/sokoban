@@ -1,6 +1,7 @@
 package es.upm.pproject.sokoban.view;
 
 import es.upm.pproject.sokoban.models.*;
+import es.upm.pproject.sokoban.core.*;
 
 import javax.swing.JPanel;
 import javax.swing.JFrame;
@@ -10,12 +11,17 @@ import java.awt.Graphics;
 
 public class Panel extends JPanel {
 
-    private final int CELL_SIZE = 75;
+    private final int CELL_SIZE = 70;
 
     private Board board;
+    private Game game;
 
 
     public Panel() {
+        this.setFocusable(true);
+
+        game = new Game(this);
+        this.addKeyListener(game);
     }
 
     @Override
@@ -38,7 +44,11 @@ public class Panel extends JPanel {
                             g.fillRect(x, y, CELL_SIZE, CELL_SIZE);
                             break;
                         case BOX: // Box
-                            g.setColor(new Color(139, 69, 19));
+                            if (cell.isGoal()) {
+                                g.setColor(new Color(210, 145, 60));
+                            } else {
+                                g.setColor(new Color(139, 69, 19));
+                            }
                             g.fillRect(x, y, CELL_SIZE, CELL_SIZE);
                             break;
                         case GOAL_POSITION: // Goal
@@ -78,5 +88,9 @@ public class Panel extends JPanel {
         // Repaint the board
         this.revalidate();
         this.repaint();
+    }
+
+    public Game getGame() {
+        return this.game;
     }
 }

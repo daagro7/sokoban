@@ -1,12 +1,15 @@
 package es.upm.pproject.sokoban.core;
 
 import es.upm.pproject.sokoban.models.Cell.CellType;
-import es.upm.pproject.sokoban.view.Window;
+import es.upm.pproject.sokoban.view.Panel;
 import es.upm.pproject.sokoban.models.WarehouseMan;
 import es.upm.pproject.sokoban.models.Board;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -14,15 +17,16 @@ import java.nio.file.Path;
 import java.util.List;
 import java.util.Scanner;
 
-public class Game {
+public class Game implements KeyListener {
 
     private static final Logger logger = LoggerFactory.getLogger(Game.class);
     private LevelManager levelManager;
     private int currentLevel;
     private int stepsOnGame;
-    private Window window;
+    private Panel panel;
 
-    public Game() {
+    public Game(Panel panel) {
+        this.panel = panel;
         logger.info("Starting Sokoban game from level: {}", 1);
         currentLevel = 1;
     }
@@ -175,13 +179,12 @@ public class Game {
 
     public void loop() {
         Scanner scanner = new Scanner(System.in);
-        window = new Window();
         while (currentLevel < 6) {
             System.out.println("Loading level " + currentLevel + "...");
             System.out.println("-------------------------------");
             levelManager = loadLevel(currentLevel);
             System.out.println(levelManager.getBoard());
-            window.setBoard(levelManager.getBoard());
+            panel.setBoard(levelManager.getBoard());
             while (levelManager.getTotalGoals() > 0) {
                 System.out.println("Enter your move (w/a/s/d to move, r to restart, u to undo) > ");
                 String input = scanner.nextLine();
@@ -200,4 +203,68 @@ public class Game {
         System.out.println("Congratulations! You've completed all the levels in the game in " + stepsOnGame);
         scanner.close();
     }
+
+
+    /*******
+     * GUI *
+     *******/
+    @Override
+    public void keyPressed(KeyEvent e) {
+        int tecla = e.getKeyCode();
+
+        switch (tecla) {
+            case KeyEvent.VK_W: // Move up
+                levelManager.moveWMan(0, -1);
+                break;
+            case KeyEvent.VK_S: // Move down
+                levelManager.moveWMan(0, 1);
+                break;
+            case KeyEvent.VK_A: // Move left
+                levelManager.moveWMan(-1, 0);
+                break;
+            case KeyEvent.VK_D: // Move rigth
+                levelManager.moveWMan(1, 0);
+                break;
+            case KeyEvent.VK_R: // Restart level
+                levelManager = loadLevel(currentLevel);
+                panel.setBoard(levelManager.getBoard());
+                logger.info("Level restarted.");
+                break;
+            case KeyEvent.VK_U: // Undo movement
+                levelManager.undoMovement();
+                break;
+            case KeyEvent.VK_ESCAPE:
+                // TODO: Menu with save game, resume...
+                System.exit(1);
+                break;
+            default:
+                System.out.println("Invalid input");
+                logger.warn("Invalid input.");
+        }
+
+        panel.repaint();
+        if (levelManager.getTotalGoals() == 0) {
+            logger.info("Level {} successfully completed in {} steps!", currentLevel, levelManager.getStepsOnLevel());
+            // TODO: Change prints
+            System.out.println(
+                    "Congratulations! You've completed the level " + currentLevel + " in "
+                            + levelManager.getStepsOnLevel() + " steps.");
+            currentLevel++;
+            stepsOnGame += levelManager.getStepsOnLevel();
+            
+            if (currentLevel > 5) {
+                System.out.println("Congratulations! You've completed all the levels in the game in " + stepsOnGame);
+                System.exit(1);
+            }
+
+            levelManager = loadLevel(currentLevel);
+            panel.setBoard(levelManager.getBoard());
+        }
+    }
+
+    @Override
+    public void keyTyped(KeyEvent e) {}
+
+    @Override
+    public void keyReleased(KeyEvent e) {}
 }
