@@ -4,8 +4,12 @@ import es.upm.pproject.sokoban.models.Cell.CellType;
 
 public class Board {
     Cell[][] cellMap;
+    private int heigth;
+    private int width;
 
     public Board(int width, int height) {
+        this.heigth = height;
+        this.width = width;
         cellMap = new Cell[height][width];
     }
 
@@ -33,5 +37,13 @@ public class Board {
         }
 
         return result;
+    }
+
+    public int getHeigth() {
+        return heigth;
+    }
+
+    public int getWidth() {
+        return width;
     }
 }

@@ -1,10 +1,9 @@
 package es.upm.pproject.sokoban.core;
 
 import es.upm.pproject.sokoban.models.Cell.CellType;
+import es.upm.pproject.sokoban.view.Window;
 import es.upm.pproject.sokoban.models.WarehouseMan;
 import es.upm.pproject.sokoban.models.Board;
-// import es.upm.pproject.sokoban.models.State;
-// import es.upm.pproject.sokoban.models.PosChange;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,6 +20,7 @@ public class Game {
     private LevelManager levelManager;
     private int currentLevel;
     private int stepsOnGame;
+    private Window window;
 
     public Game() {
         logger.info("Starting Sokoban game from level: {}", 1);
@@ -175,11 +175,13 @@ public class Game {
 
     public void loop() {
         Scanner scanner = new Scanner(System.in);
+        window = new Window();
         while (currentLevel < 6) {
             System.out.println("Loading level " + currentLevel + "...");
             System.out.println("-------------------------------");
             levelManager = loadLevel(currentLevel);
             System.out.println(levelManager.getBoard());
+            window.setBoard(levelManager.getBoard());
             while (levelManager.getTotalGoals() > 0) {
                 System.out.println("Enter your move (w/a/s/d to move, r to restart, u to undo) > ");
                 String input = scanner.nextLine();
