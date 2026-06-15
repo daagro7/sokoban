@@ -11,16 +11,18 @@ import java.awt.Graphics;
 
 public class Panel extends JPanel {
 
-    private final int CELL_SIZE = 70;
+    private final int CELL_SIZE = 65;
 
+    private Window window;
     private Board board;
     private Game game;
 
 
-    public Panel() {
+    public Panel(Window window) {
+        this.window = window;
         this.setFocusable(true);
 
-        game = new Game(this);
+        game = new Game(window, this);
         this.addKeyListener(game);
     }
 
@@ -92,5 +94,9 @@ public class Panel extends JPanel {
 
     public Game getGame() {
         return this.game;
+    }
+
+    public Window getWindow() {
+        return this.window;
     }
 }
