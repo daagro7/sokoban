@@ -1,6 +1,7 @@
 package es.upm.pproject.sokoban.core;
 
 import es.upm.pproject.sokoban.models.Cell.CellType;
+import es.upm.pproject.sokoban.view.Window;
 import es.upm.pproject.sokoban.view.Panel;
 import es.upm.pproject.sokoban.models.WarehouseMan;
 import es.upm.pproject.sokoban.models.Board;
@@ -24,8 +25,10 @@ public class Game implements KeyListener {
     private int currentLevel;
     private int stepsOnGame;
     private Panel panel;
+    private Window window;
 
-    public Game(Panel panel) {
+    public Game(Window window, Panel panel) {
+        this.window = window;
         this.panel = panel;
         logger.info("Starting Sokoban game from level: {}", 1);
         currentLevel = 1;
@@ -47,10 +50,14 @@ public class Game implements KeyListener {
                 break;
             case 'r':
                 levelManager = loadLevel(currentLevel);
+                panel.setBoard(levelManager.getBoard());
                 logger.info("Level restarted.");
                 break;
             case 'u':
                 levelManager.undoMovement();
+                break;
+            case 'm': // TODO: Menu with save game, resume...
+                System.exit(1);
                 break;
             default:
                 System.out.println("Invalid input");
@@ -177,7 +184,7 @@ public class Game implements KeyListener {
         return new LevelManager(board, warehouseMan, totalGoals);
     }
 
-    public void loop() {
+    public void loopTUI() {
         Scanner scanner = new Scanner(System.in);
         while (currentLevel < 6) {
             System.out.println("Loading level " + currentLevel + "...");
@@ -204,45 +211,60 @@ public class Game implements KeyListener {
         scanner.close();
     }
 
-
     /*******
      * GUI *
      *******/
     @Override
     public void keyPressed(KeyEvent e) {
         int tecla = e.getKeyCode();
+        char key = ' ';
 
         switch (tecla) {
             case KeyEvent.VK_W: // Move up
-                levelManager.moveWMan(0, -1);
+                key = 'w';
                 break;
             case KeyEvent.VK_S: // Move down
-                levelManager.moveWMan(0, 1);
+                key = 's';
                 break;
             case KeyEvent.VK_A: // Move left
-                levelManager.moveWMan(-1, 0);
+                key = 'a';
                 break;
             case KeyEvent.VK_D: // Move rigth
-                levelManager.moveWMan(1, 0);
+                key = 'd';
                 break;
             case KeyEvent.VK_R: // Restart level
-                levelManager = loadLevel(currentLevel);
-                panel.setBoard(levelManager.getBoard());
-                logger.info("Level restarted.");
+                key = 'r';
                 break;
             case KeyEvent.VK_U: // Undo movement
-                levelManager.undoMovement();
+                key = 'u';
                 break;
-            case KeyEvent.VK_ESCAPE:
-                // TODO: Menu with save game, resume...
-                System.exit(1);
+            case KeyEvent.VK_ESCAPE: // Menu
+                key = 'm';
                 break;
             default:
-                System.out.println("Invalid input");
-                logger.warn("Invalid input.");
         }
 
+        keyboardInput(key);
+        window.updateSteps(levelManager.getStepsOnLevel());
         panel.repaint();
+        levelCompleted();
+    }
+
+    @Override
+    public void keyTyped(KeyEvent e) {}
+
+    @Override
+    public void keyReleased(KeyEvent e) {}
+
+
+    public void loopGUI() {
+        // TODO: Make the start menu
+        levelManager = loadLevel(currentLevel);
+        panel.setBoard(levelManager.getBoard());
+        window.newLevel(currentLevel);
+    }
+
+    public boolean levelCompleted() {
         if (levelManager.getTotalGoals() == 0) {
             logger.info("Level {} successfully completed in {} steps!", currentLevel, levelManager.getStepsOnLevel());
             // TODO: Change prints
@@ -258,13 +280,10 @@ public class Game implements KeyListener {
             }
 
             levelManager = loadLevel(currentLevel);
+            window.newLevel(currentLevel);
             panel.setBoard(levelManager.getBoard());
+            return true;
         }
+        return false;
     }
-
-    @Override
-    public void keyTyped(KeyEvent e) {}
-
-    @Override
-    public void keyReleased(KeyEvent e) {}
 }

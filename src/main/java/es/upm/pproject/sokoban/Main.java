@@ -10,6 +10,7 @@ public class Main {
     Panel panel = window.getPanel();
     System.out.println("Welcome to sokoban. w, a, s, d to move, r to restart and u to undo a movement");
     Game game = panel.getGame();
-    game.loop();
+    // game.loopTUI(); // TUI
+    game.loopGUI(); // GUI
   }
 }
