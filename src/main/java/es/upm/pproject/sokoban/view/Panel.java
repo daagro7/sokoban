@@ -21,8 +21,9 @@ public class Panel extends JPanel {
 
     private int selectedOption;
     private final String sokobanString = "SOKOBAN";
-    private final String MenuString = "MENU";
-    private final String[] menuOptions = {"NEW GAME", "LOAD GAME", "CLOSE SOKOBAN"};
+    private final String[] startingMenuOptions = {"NEW GAME", "LOAD GAME", "CLOSE SOKOBAN"};
+    private final String menuString = "MENU";
+    private final String[] levelMenuOptions = {"RESUME", "SAVE GAME", "QUIT"};
 
     public Panel(Window window) {
         this.window = window;
@@ -38,10 +39,13 @@ public class Panel extends JPanel {
 
         g.setColor(Color.GREEN);
 
-        if (window.getLevel() == 0) { // Starting menu
-            drawMenu(g);
+        if (window.getLevelPanel() == 0) { // Starting menu
+            drawStartingMenu(g);
         }
-        else if (window.getLevel() > 0) { // Level board
+        else if (window.getLevelPanel() == -1) { // Level menu
+            drawLevelMenu(g);
+        }
+        else if (window.getLevelPanel() > 0) { // Level board
             drawBoard(g);
         }
     }
@@ -57,7 +61,7 @@ public class Panel extends JPanel {
 
                 switch (cell.getCellType()) {
                     case WALL: // Wall
-                        g.setColor(Color.GRAY);
+                        g.setColor(Color.DARK_GRAY);
                         g.fillRect(x, y, CELL_SIZE, CELL_SIZE);
                         break;
                     case BOX: // Box
@@ -80,14 +84,16 @@ public class Panel extends JPanel {
                         break;
                 }
                 
-                // Draw the lines that separates every cell
-                g.setColor(new Color(50, 50, 50));
-                g.drawRect(x, y, CELL_SIZE, CELL_SIZE);
+                if (cell.getCellType() != Cell.CellType.WALL) {
+                    // Draw the lines that separates every cell
+                    g.setColor(Color.BLACK);
+                    g.drawRect(x, y, CELL_SIZE, CELL_SIZE);
+                }
             }
         }
     }
     
-    public void drawMenu(Graphics g) {
+    public void drawStartingMenu(Graphics g) {
         // Menu title
         // Center the text on the option box
         g.setColor(Color.BLACK);
@@ -103,12 +109,12 @@ public class Panel extends JPanel {
         int boxHeight = 50;
         int startX = (this.getWidth() - boxWidth) / 2;
         int spacing = 30;
-        int totalMenuHeight = (menuOptions.length * boxHeight) + ((menuOptions.length - 1) * spacing);
+        int totalMenuHeight = (startingMenuOptions.length * boxHeight) + ((startingMenuOptions.length - 1) * spacing);
         int startY = (this.getHeight() - totalMenuHeight) / 2;
 
         g.setFont(new Font("SansSerif", Font.BOLD, 18));
 
-        for (int i = 0; i < menuOptions.length; i++) {
+        for (int i = 0; i < startingMenuOptions.length; i++) {
             int currentY = startY + i * (boxHeight + spacing);
 
             // Efect of the selected option to the boxes
@@ -121,28 +127,68 @@ public class Panel extends JPanel {
         
             // Center the text on the option box
             metrics = g.getFontMetrics(g.getFontMetrics().getFont());
-            textWidth = metrics.stringWidth(menuOptions[i]);
+            textWidth = metrics.stringWidth(startingMenuOptions[i]);
             centeredX = (this.getWidth() - textWidth) / 2;
 
             // Draw the text on the panel
             g.setColor(Color.WHITE);
-            g.drawString(menuOptions[i], centeredX, currentY + 32);
+            g.drawString(startingMenuOptions[i], centeredX, currentY + 32);
         }
     }
 
-    public int getSelectedOption() { return this.selectedOption; }
-    public void setSelectedOption(int option) { this.selectedOption = option; }
-    public int getNumberOptions() { return menuOptions.length; }
+    public void drawLevelMenu(Graphics g) {
+        // Menu title
+        // Center the text on the option box
+        g.setColor(Color.BLACK);
+        g.setFont(new Font("SansSerif", Font.BOLD, 32));
+        FontMetrics metrics = g.getFontMetrics(g.getFontMetrics().getFont());
+        int textWidth = metrics.stringWidth(menuString);
+        int centeredX = (this.getWidth() - textWidth) / 2;
+        
+        g.drawString(menuString, centeredX, 80);
 
-    public void setBoard(Board newBoard) {
+        // Boxes configuration
+        int boxWidth = 220;
+        int boxHeight = 50;
+        int startX = (this.getWidth() - boxWidth) / 2;
+        int spacing = 30;
+        int totalMenuHeight = (levelMenuOptions.length * boxHeight) + ((levelMenuOptions.length - 1) * spacing);
+        int startY = (this.getHeight() - totalMenuHeight) / 2;
+
+        g.setFont(new Font("SansSerif", Font.BOLD, 18));
+
+        for (int i = 0; i < levelMenuOptions.length; i++) {
+            int currentY = startY + i * (boxHeight + spacing);
+
+            // Efect of the selected option to the boxes
+            if (i == selectedOption) {
+                g.setColor(new Color(46, 139, 87));
+            } else {
+                g.setColor(new Color(70, 70, 70));
+            }
+            g.fillRect(startX, currentY, boxWidth, boxHeight);
+        
+            // Center the text on the option box
+            metrics = g.getFontMetrics(g.getFontMetrics().getFont());
+            textWidth = metrics.stringWidth(levelMenuOptions[i]);
+            centeredX = (this.getWidth() - textWidth) / 2;
+
+            // Draw the text on the panel
+            g.setColor(Color.WHITE);
+            g.drawString(levelMenuOptions[i], centeredX, currentY + 32);
+        }
+    }
+
+    // Getters/Setters
+    public void setPanel(Board newBoard) {
         int heigthPanel;
         int widthPanel;
 
-        if (window.getLevel() <= 0) { // Menus panel
+        if (window.getLevelPanel() <= 0) { // Menus panel size
             heigthPanel = 10 * CELL_SIZE;
             widthPanel = 10 * CELL_SIZE;
         }
-        else { // Board panel
+        else { // Board panel size
             // Added new board
             board = newBoard;
 
@@ -163,11 +209,12 @@ public class Panel extends JPanel {
         this.repaint();
     }
 
-    public Game getGame() {
-        return this.game;
-    }
+    public Game getGame() { return this.game; }
+    public Window getWindow() { return this.window; }
+    public int getSelectedOption() { return this.selectedOption; }
+    public void setSelectedOption(int option) { this.selectedOption = option; }
 
-    public Window getWindow() {
-        return this.window;
+    public int getNumberOptions() {
+        return window.getLevelPanel() == 0 ? startingMenuOptions.length : levelMenuOptions.length;
     }
 }

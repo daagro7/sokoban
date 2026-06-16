@@ -31,79 +31,93 @@ public class Game implements KeyListener {
         this.window = window;
         this.panel = panel;
         logger.info("Starting Sokoban game from level: {}", 1);
-        currentLevel = 0;
+        currentLevel = 1;
     }
 
     private void keyboardInput(char input) {
-        if (currentLevel == 0) { // Starting menu
-            int currentOption;
+        if (window.getLevelPanel() == 0 || window.getLevelPanel() == -1) { // Menus
+            int currentOption = panel.getSelectedOption();
             switch (input) {
-                case 'w':
-                    currentOption = panel.getSelectedOption();
+                case 'w': // Move to the option above or the lasta one
                     currentOption = (currentOption > 0 ? currentOption - 1 : panel.getNumberOptions()-1);
                     panel.setSelectedOption(currentOption);
-                    panel.repaint();
                     break;
-                case 's':
-                    currentOption = panel.getSelectedOption();
+                case 's': // Move to the option below or the first one
                     currentOption = (currentOption < panel.getNumberOptions()-1 ? currentOption + 1 : 0);
                     panel.setSelectedOption(currentOption);
-                    panel.repaint();
                     break;
-                case ' ':
-                    currentOption = panel.getSelectedOption();
-                    if (currentOption == 0) { // NEW GAME
-                        currentLevel = 1;
-                        levelManager = loadLevel(currentLevel);
-                        window.newLevel(currentLevel);
-                        panel.setBoard(levelManager.getBoard());
-                        panel.repaint();
+                case ' ': // Confirm option
+                    if (window.getLevelPanel() == 0) {
+                        startingMenuOptions(currentOption);
                     }
-                    else if (currentOption == 1) { // LOAD GAME
-                        // TODO: Load game logic
-                    }
-                    else if (currentOption == 2) { // CLOSE SOKOBAN
-                        // TODO: Close game logic
-                        System.exit(1);
+                    else {
+                        levelMenuOptions(currentOption);
                     }
                     break;
                 default:
-                    break;
             }
-            
         }
-        else if (currentLevel > 0) { // Levels movements
+        else if (window.getLevelPanel() > 0) { // Levels movements
             switch (input) {
-                case 'w':
+                case 'w': // Move up
                     levelManager.moveWMan(0, -1);
                     break;
-                case 's':
+                case 's': // Move  down
                     levelManager.moveWMan(0, 1);
                     break;
-                case 'a':
+                case 'a': // Move left
                     levelManager.moveWMan(-1, 0);
                     break;
-                case 'd':
+                case 'd': // Move rigth
                     levelManager.moveWMan(1, 0);
                     break;
-                case 'r':
+                case 'r': // Restart level
                     levelManager = loadLevel(currentLevel);
-                    panel.setBoard(levelManager.getBoard());
+                    panel.setPanel(levelManager.getBoard());
                     logger.info("Level restarted.");
                     break;
-                case 'u':
+                case 'u': // Undo movement
                     levelManager.undoMovement();
                     break;
-                case 'm': // TODO: Menu with save game, resume...
-                    currentLevel = 0;
-                    window.newLevel(currentLevel);
-                    panel.setBoard(null);
-                    // System.exit(1);
+                case 'm': // Open level menu
+                    window.newLevel(-1);
+                    panel.setPanel(null);
                     break;
                 default:
                     System.out.println("Invalid input");
                     logger.warn("Invalid input.");
             }
+        }
+    }
+
+    public void startingMenuOptions(int currentOption) {
+        if (currentOption == 0) { // NEW GAME
+            levelManager = loadLevel(currentLevel);
+            window.newLevel(currentLevel);
+            panel.setPanel(levelManager.getBoard());
+        }
+        else if (currentOption == 1) { // LOAD GAME
+            // TODO: Load game logic
+        }
+        else if (currentOption == 2) { // CLOSE SOKOBAN
+            // TODO: Close game logic
+            System.exit(1);
+        }
+    }
+
+    public void levelMenuOptions(int currentOption) {
+        if (currentOption == 0) { // RESUME
+            window.newLevel(currentLevel);
+            panel.setPanel(levelManager.getBoard());
+        }
+        else if (currentOption == 1) { // SAVE GAME
+            // TODO: Save game logic
+        }
+        else if (currentOption == 2) { // QUIT
+            currentLevel = 1;
+            window.newLevel(0);
+            panel.setPanel(null);
+            panel.setSelectedOption(0);
         }
     }
 
@@ -233,7 +247,7 @@ public class Game implements KeyListener {
             System.out.println("-------------------------------");
             levelManager = loadLevel(currentLevel);
             System.out.println(levelManager.getBoard());
-            panel.setBoard(levelManager.getBoard());
+            panel.setPanel(levelManager.getBoard());
             while (levelManager.getTotalGoals() > 0) {
                 System.out.println("Enter your move (w/a/s/d to move, r to restart, u to undo) > ");
                 String input = scanner.nextLine();
@@ -262,28 +276,28 @@ public class Game implements KeyListener {
         char key = 'p';
 
         switch (tecla) {
-            case KeyEvent.VK_W: // Move up
+            case KeyEvent.VK_W:
                 key = 'w';
                 break;
-            case KeyEvent.VK_S: // Move down
+            case KeyEvent.VK_S:
                 key = 's';
                 break;
-            case KeyEvent.VK_A: // Move left
+            case KeyEvent.VK_A:
                 key = 'a';
                 break;
-            case KeyEvent.VK_D: // Move rigth
+            case KeyEvent.VK_D:
                 key = 'd';
                 break;
-            case KeyEvent.VK_R: // Restart level
+            case KeyEvent.VK_R:
                 key = 'r';
                 break;
-            case KeyEvent.VK_U: // Undo movement
+            case KeyEvent.VK_U:
                 key = 'u';
                 break;
-            case KeyEvent.VK_ESCAPE: // Menu
+            case KeyEvent.VK_ESCAPE:
                 key = 'm';
                 break;
-            case KeyEvent.VK_ENTER: // Confirm option
+            case KeyEvent.VK_ENTER:
             case KeyEvent.VK_SPACE:
                 key = ' ';
             default:
@@ -291,7 +305,7 @@ public class Game implements KeyListener {
 
         keyboardInput(key);
         panel.repaint();
-        if (currentLevel > 0) {
+        if (window.getLevelPanel() > 0) {
             window.updateSteps(levelManager.getStepsOnLevel());
             levelCompleted();
         }
@@ -306,8 +320,8 @@ public class Game implements KeyListener {
 
     public void loopGUI() {
         // TODO: Make the start menu
-        panel.setBoard(null);
-        window.newLevel(currentLevel);
+        panel.setPanel(null);
+        window.newLevel(0);
     }
 
     public boolean levelCompleted() {
@@ -327,7 +341,7 @@ public class Game implements KeyListener {
 
             levelManager = loadLevel(currentLevel);
             window.newLevel(currentLevel);
-            panel.setBoard(levelManager.getBoard());
+            panel.setPanel(levelManager.getBoard());
             return true;
         }
         return false;

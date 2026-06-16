@@ -8,8 +8,8 @@ import java.awt.Font;
 public class Window extends JFrame {
 
     private Panel panel;
-    private JLabel level;
-    private int currentLevel;
+    private JLabel text;
+    private int levelPanel;
 
     public Window() {
         panel = new Panel(this);
@@ -29,40 +29,42 @@ public class Window extends JFrame {
         setLayout(new BorderLayout());
 
         // Create the text tag
-        level = new JLabel(" ", JLabel.CENTER);
-        level.setFont(new Font("Serif", Font.PLAIN, 18));
+        text = new JLabel(" ", JLabel.CENTER);
+        text.setFont(new Font("Serif", Font.PLAIN, 18));
 
-        add(level, BorderLayout.NORTH);
+        add(text, BorderLayout.NORTH);
         add(panel, BorderLayout.CENTER);
 
         // Make the window visible
         this.setVisible(true);
     }
 
+
+    // Getters/Setters
     public Panel getPanel() {
         return panel;
     }
 
-    public int getLevel() {
-        return currentLevel;
+    public int getLevelPanel() {
+        return levelPanel;
     }
 
     public void updateSteps(int newStep) {
-        if (currentLevel > 0) {
-            level.setText("Level: " + currentLevel + "  Steps: " + newStep);
+        if (levelPanel > 0) {
+            text.setText("Level: " + levelPanel + "  Steps: " + newStep);
         }
         else {
-            level.setText(" ");
+            text.setText(" ");
         }
     }
 
     public void newLevel(int newLevel) {
-        currentLevel = newLevel;
-        if (currentLevel > 0) {
-            level.setText("Level: " + currentLevel + "  Steps: 0");
+        levelPanel = newLevel;
+        if (levelPanel > 0) {
+            text.setText("Level: " + levelPanel + "  Steps: 0");
         }
         else {
-            level.setText(" ");
+            text.setText(" ");
         }
     }
 }
