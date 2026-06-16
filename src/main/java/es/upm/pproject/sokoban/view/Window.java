@@ -71,4 +71,8 @@ public class Window extends JFrame {
     public int getLevelPanel() {
         return levelPanel;
     }
+
+    public boolean isMenu(){
+        return levelPanel <= 0;
+    }
 }

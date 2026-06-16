@@ -1,7 +1,6 @@
 package es.upm.pproject.sokoban.view;
 
 import es.upm.pproject.sokoban.models.*;
-import es.upm.pproject.sokoban.core.*;
 
 import javax.swing.JPanel;
 import javax.swing.JFrame;
@@ -16,21 +15,17 @@ public class Panel extends JPanel {
     private final int CELL_SIZE = 65;
 
     private Window window;
-    private Board board;
-    private Game game;
+    private Board board; // Last board painted
 
     private int selectedOption;
     private final String sokobanString = "SOKOBAN";
-    private final String[] startingMenuOptions = {"NEW GAME", "LOAD GAME", "CLOSE SOKOBAN"};
+    private final String[] startingMenuOptions = { "NEW GAME", "LOAD GAME", "CLOSE SOKOBAN" };
     private final String menuString = "MENU";
-    private final String[] levelMenuOptions = {"RESUME", "SAVE GAME", "QUIT"};
+    private final String[] levelMenuOptions = { "RESUME", "SAVE GAME", "QUIT" };
 
     public Panel(Window window) {
         this.window = window;
         this.setFocusable(true);
-
-        game = new Game(window, this);
-        this.addKeyListener(game);
     }
 
     @Override
@@ -41,11 +36,9 @@ public class Panel extends JPanel {
 
         if (window.getLevelPanel() == 0) { // Starting menu
             drawStartingMenu(g);
-        }
-        else if (window.getLevelPanel() == -1) { // Level menu
+        } else if (window.getLevelPanel() == -1) { // Level menu
             drawLevelMenu(g);
-        }
-        else if (window.getLevelPanel() > 0) { // Level board
+        } else if (window.getLevelPanel() > 0) { // Level board
             drawBoard(g);
         }
     }
@@ -53,7 +46,7 @@ public class Panel extends JPanel {
     public void drawBoard(Graphics g) {
         for (int heigth = 0; heigth < board.getHeigth(); heigth++) {
             for (int width = 0; width < board.getWidth(); width++) {
-                
+
                 int x = width * CELL_SIZE;
                 int y = heigth * CELL_SIZE;
 
@@ -74,7 +67,7 @@ public class Panel extends JPanel {
                         break;
                     case GOAL_POSITION: // Goal
                         g.setColor(Color.RED);
-                        g.fillOval(x + CELL_SIZE/4, y + CELL_SIZE/4, CELL_SIZE/2, CELL_SIZE/2);
+                        g.fillOval(x + CELL_SIZE / 4, y + CELL_SIZE / 4, CELL_SIZE / 2, CELL_SIZE / 2);
                         break;
                     case WAREHOUSE_MAN: // Player
                         g.setColor(Color.BLUE);
@@ -83,7 +76,7 @@ public class Panel extends JPanel {
                     default:
                         break;
                 }
-                
+
                 if (cell.getCellType() != Cell.CellType.WALL) {
                     // Draw the lines that separates every cell
                     g.setColor(Color.BLACK);
@@ -92,7 +85,7 @@ public class Panel extends JPanel {
             }
         }
     }
-    
+
     public void drawStartingMenu(Graphics g) {
         // Menu title
         // Center the text on the option box
@@ -101,7 +94,7 @@ public class Panel extends JPanel {
         FontMetrics metrics = g.getFontMetrics(g.getFontMetrics().getFont());
         int textWidth = metrics.stringWidth(sokobanString);
         int centeredX = (this.getWidth() - textWidth) / 2;
-        
+
         g.drawString(sokobanString, centeredX, 80);
 
         // Boxes configuration
@@ -124,7 +117,7 @@ public class Panel extends JPanel {
                 g.setColor(new Color(70, 70, 70));
             }
             g.fillRect(startX, currentY, boxWidth, boxHeight);
-        
+
             // Center the text on the option box
             metrics = g.getFontMetrics(g.getFontMetrics().getFont());
             textWidth = metrics.stringWidth(startingMenuOptions[i]);
@@ -144,7 +137,7 @@ public class Panel extends JPanel {
         FontMetrics metrics = g.getFontMetrics(g.getFontMetrics().getFont());
         int textWidth = metrics.stringWidth(menuString);
         int centeredX = (this.getWidth() - textWidth) / 2;
-        
+
         g.drawString(menuString, centeredX, 80);
 
         // Boxes configuration
@@ -167,7 +160,7 @@ public class Panel extends JPanel {
                 g.setColor(new Color(70, 70, 70));
             }
             g.fillRect(startX, currentY, boxWidth, boxHeight);
-        
+
             // Center the text on the option box
             metrics = g.getFontMetrics(g.getFontMetrics().getFont());
             textWidth = metrics.stringWidth(levelMenuOptions[i]);
@@ -187,9 +180,8 @@ public class Panel extends JPanel {
         if (window.getLevelPanel() <= 0) { // Menus panel size
             heigthPanel = 10 * CELL_SIZE;
             widthPanel = 10 * CELL_SIZE;
-        }
-        else { // Board panel size
-            // Added new board
+        } else { // Board panel size
+                 // Added new board
             board = newBoard;
 
             // Dimensions for the panel
@@ -209,10 +201,17 @@ public class Panel extends JPanel {
         this.repaint();
     }
 
-    public Game getGame() { return this.game; }
-    public Window getWindow() { return this.window; }
-    public int getSelectedOption() { return this.selectedOption; }
-    public void setSelectedOption(int option) { this.selectedOption = option; }
+    public Window getWindow() {
+        return this.window;
+    }
+
+    public int getSelectedOption() {
+        return this.selectedOption;
+    }
+
+    public void setSelectedOption(int option) {
+        this.selectedOption = option;
+    }
 
     public int getNumberOptions() {
         return window.getLevelPanel() == 0 ? startingMenuOptions.length : levelMenuOptions.length;
