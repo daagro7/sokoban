@@ -100,8 +100,7 @@ public class Game implements KeyListener {
             // TODO: Load game logic
         }
         else if (currentOption == 2) { // CLOSE SOKOBAN
-            // TODO: Close game logic
-            System.exit(1);
+            window.closeApplication();
         }
     }
 
@@ -319,7 +318,6 @@ public class Game implements KeyListener {
 
 
     public void loopGUI() {
-        // TODO: Make the start menu
         panel.setPanel(null);
         window.newLevel(0);
     }
@@ -327,7 +325,7 @@ public class Game implements KeyListener {
     public boolean levelCompleted() {
         if (levelManager.getTotalGoals() == 0) {
             logger.info("Level {} successfully completed in {} steps!", currentLevel, levelManager.getStepsOnLevel());
-            // TODO: Change prints
+            // TODO: Change prints to text in the panels
             System.out.println(
                     "Congratulations! You've completed the level " + currentLevel + " in "
                             + levelManager.getStepsOnLevel() + " steps.");
@@ -336,7 +334,10 @@ public class Game implements KeyListener {
             
             if (currentLevel > 5) {
                 System.out.println("Congratulations! You've completed all the levels in the game in " + stepsOnGame);
-                System.exit(1);
+                currentLevel = 1;
+                window.newLevel(0);
+                panel.setPanel(null);
+                return true;
             }
 
             levelManager = loadLevel(currentLevel);

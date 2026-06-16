@@ -40,15 +40,6 @@ public class Window extends JFrame {
     }
 
 
-    // Getters/Setters
-    public Panel getPanel() {
-        return panel;
-    }
-
-    public int getLevelPanel() {
-        return levelPanel;
-    }
-
     public void updateSteps(int newStep) {
         if (levelPanel > 0) {
             text.setText("Level: " + levelPanel + "  Steps: " + newStep);
@@ -66,5 +57,18 @@ public class Window extends JFrame {
         else {
             text.setText(" ");
         }
+    }
+
+    public void closeApplication() {
+        this.dispose();
+    }
+
+    // Getters/Setters
+    public Panel getPanel() {
+        return panel;
+    }
+
+    public int getLevelPanel() {
+        return levelPanel;
     }
 }
