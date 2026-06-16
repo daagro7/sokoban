@@ -43,12 +43,26 @@ public class Window extends JFrame {
         return panel;
     }
 
+    public int getLevel() {
+        return currentLevel;
+    }
+
     public void updateSteps(int newStep) {
-        level.setText("Level: " + currentLevel + "  Steps: " + newStep);
+        if (currentLevel > 0) {
+            level.setText("Level: " + currentLevel + "  Steps: " + newStep);
+        }
+        else {
+            level.setText(" ");
+        }
     }
 
     public void newLevel(int newLevel) {
         currentLevel = newLevel;
-        level.setText("Level: " + currentLevel + "  Steps: 0");
+        if (currentLevel > 0) {
+            level.setText("Level: " + currentLevel + "  Steps: 0");
+        }
+        else {
+            level.setText(" ");
+        }
     }
 }
