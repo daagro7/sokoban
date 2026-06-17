@@ -3,6 +3,7 @@ package es.upm.pproject.sokoban.models;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.Files;
+import java.nio.charset.StandardCharsets;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -41,7 +42,7 @@ public class GameSaver {
     }
 
     try {
-      Files.write(path, save.toString().getBytes());
+      Files.writeString(path, save.toString(), StandardCharsets.UTF_8);
     } catch (Exception e) {
       logger.error("Error saving game to file: {}", e.getMessage());
     }
