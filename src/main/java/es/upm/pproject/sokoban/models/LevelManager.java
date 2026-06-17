@@ -1,9 +1,5 @@
-package es.upm.pproject.sokoban.core;
+package es.upm.pproject.sokoban.models;
 
-import es.upm.pproject.sokoban.models.Board;
-import es.upm.pproject.sokoban.models.PosChange;
-import es.upm.pproject.sokoban.models.State;
-import es.upm.pproject.sokoban.models.WarehouseMan;
 import es.upm.pproject.sokoban.models.Cell.CellType;
 
 import java.util.Deque;

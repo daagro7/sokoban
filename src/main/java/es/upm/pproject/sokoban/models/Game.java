@@ -1,6 +1,4 @@
-package es.upm.pproject.sokoban.core;
-
-import es.upm.pproject.sokoban.models.Board;
+package es.upm.pproject.sokoban.models;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

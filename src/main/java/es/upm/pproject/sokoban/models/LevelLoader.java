@@ -1,8 +1,6 @@
-package es.upm.pproject.sokoban.core;
+package es.upm.pproject.sokoban.models;
 
-import es.upm.pproject.sokoban.models.Board;
 import es.upm.pproject.sokoban.models.Cell.CellType;
-import es.upm.pproject.sokoban.models.WarehouseMan;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

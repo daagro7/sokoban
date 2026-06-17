@@ -1,8 +1,11 @@
-package es.upm.pproject.sokoban.view;
+package es.upm.pproject.sokoban.controller;
 
-import es.upm.pproject.sokoban.core.Game;
+import es.upm.pproject.sokoban.models.Game;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+
+import es.upm.pproject.sokoban.view.Panel;
+import es.upm.pproject.sokoban.view.Window;
 
 public class SokobanGUI implements KeyListener, SokobanUI {
   private Game game;

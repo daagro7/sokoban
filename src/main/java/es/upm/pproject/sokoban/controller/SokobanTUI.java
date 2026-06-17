@@ -1,10 +1,10 @@
-package es.upm.pproject.sokoban.view;
+package es.upm.pproject.sokoban.controller;
 
 import java.util.Scanner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import es.upm.pproject.sokoban.core.Game;
+import es.upm.pproject.sokoban.models.Game;
 
 public class SokobanTUI implements SokobanUI {
   private static final Logger logger = LoggerFactory.getLogger(SokobanTUI.class);

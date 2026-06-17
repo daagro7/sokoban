@@ -1,22 +1,23 @@
 package es.upm.pproject.sokoban;
 
-import es.upm.pproject.sokoban.core.Game;
+import es.upm.pproject.sokoban.models.Game;
 
-import es.upm.pproject.sokoban.view.SokobanUI;
-import es.upm.pproject.sokoban.view.SokobanTUI;
-import es.upm.pproject.sokoban.view.SokobanGUI;
+import es.upm.pproject.sokoban.controller.SokobanUI;
+import es.upm.pproject.sokoban.controller.SokobanTUI;
+import es.upm.pproject.sokoban.controller.SokobanGUI;
 
 public class Main {
   public static void main(String[] args) {
     Game game = new Game();
-    SokobanUI tui = new SokobanTUI(game);
-    SokobanUI gui = new SokobanGUI(game);
+    SokobanUI ui;
 
     // If users want tui or gui
     if (args.length > 0 && args[0].equalsIgnoreCase("tui")) {
-      tui.start();
+      ui = new SokobanTUI(game);
     } else {
-      gui.start();
+      ui = new SokobanGUI(game);
     }
+
+    ui.start();
   }
 }
