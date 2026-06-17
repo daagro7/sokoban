@@ -116,6 +116,7 @@ public class SokobanGUI implements KeyListener, SokobanUI {
     if (currentOption == 0) { // NEW GAME
       game.setCurrentLevel(1);
       game.loadCurrentLevel();
+      window.setLevelName(getLevelName());
       panel.setCurrentLevel(game.getCurrentLevel());
       game.setStepsOnGame(0);
       window.newLevel(-2);
@@ -209,17 +210,20 @@ public class SokobanGUI implements KeyListener, SokobanUI {
       // If level completed update the window and panel to the next level
       if (game.levelCompleted()) {
         panel.setCurrentLevel(game.getCurrentLevel());
+        window.setLevelName(getLevelName());
         window.newLevel(-2);
         panel.setPanel(null);
       }
     }
   }
 
+  /* Not use in our game */
   @Override
   public void keyTyped(KeyEvent e) {
     return;
   }
 
+  /* Not use in our game */
   @Override
   public void keyReleased(KeyEvent e) {
     return;
@@ -230,5 +234,9 @@ public class SokobanGUI implements KeyListener, SokobanUI {
     // There is no need for loop, just start the game
     panel.setPanel(null);
     window.newLevel(0);
+  }
+
+  public String getLevelName() {
+    return game.getLevelName();
   }
 }

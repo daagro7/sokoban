@@ -11,6 +11,7 @@ public class Window extends JFrame {
     private JLabel text;
     private int levelPanel;
     private int stepsOnGame;
+    private String levelName;
 
     public Window() {
         panel = new Panel(this);
@@ -43,9 +44,9 @@ public class Window extends JFrame {
 
     public void updateSteps(int newStep) {
         if (levelPanel > 0) {
-            text.setText("Level: " + levelPanel +
-            " Steps: " + newStep +
-            " Steps on game: " + stepsOnGame);
+            text.setText(levelName +
+            " | Steps: " + newStep +
+            " | Total steps: " + stepsOnGame);
         }
         else {
             text.setText(" ");
@@ -55,9 +56,9 @@ public class Window extends JFrame {
     public void newLevel(int newLevel) {
         levelPanel = newLevel;
         if (levelPanel > 0) {
-            text.setText("Level: " + levelPanel +
-            " Steps: 0" +
-            " Steps on game: " + stepsOnGame);
+            text.setText(levelName +
+            " | Steps: 0" +
+            " | Total steps: " + stepsOnGame);
         }
         else {
             text.setText(" ");
@@ -87,5 +88,13 @@ public class Window extends JFrame {
 
     public int getStepsOnGame() {
         return stepsOnGame;
+    }
+
+    public void setLevelName(String levelName) {
+        this.levelName = levelName;
+    }
+
+    public String getLevelName() {
+        return levelName;
     }
 }
