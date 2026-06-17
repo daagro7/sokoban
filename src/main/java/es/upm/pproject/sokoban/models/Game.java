@@ -66,6 +66,10 @@ public class Game {
         this.stepsOnGame = steps;
     }
 
+    public void setGameCompleted(boolean completed) {
+        isGameCompleted = completed;
+    }
+
     // Movemente and interaction
     public void move(int dx, int dy) {
         levelManager.moveWMan(dx, dy);
@@ -144,6 +148,8 @@ public class Game {
                     logger.warn("Unknown movement character '{}' when loading game.", move);
             }
         }
+
+        this.isGameCompleted = false;
 
         logger.info("Game loaded successfully from file: {}", filePath);
         return true;

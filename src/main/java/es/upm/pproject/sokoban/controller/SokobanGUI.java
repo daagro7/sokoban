@@ -91,7 +91,9 @@ public class SokobanGUI implements KeyListener, SokobanUI {
       }
 
       game.saveGame(filePath);
-      levelMenuOptions(0); // Resume game
+      window.newLevel(this.game.getCurrentLevel());
+      panel.setPanel(this.game.getBoard());
+      panel.repaint();
     }
   }
 
@@ -105,6 +107,7 @@ public class SokobanGUI implements KeyListener, SokobanUI {
       String filePath = fileToLoad.getAbsolutePath();
 
       if (game.loadGame(filePath)) {
+        panel.setCompleted(false);
         window.setLevelName(game.getLevelName());
         panel.setCurrentLevel(game.getCurrentLevel());
         window.newLevel(game.getCurrentLevel());
@@ -116,6 +119,8 @@ public class SokobanGUI implements KeyListener, SokobanUI {
 
   private void startingMenuOptions(int currentOption) {
     if (currentOption == 0) { // NEW GAME
+      game.setGameCompleted(false);
+      panel.setCompleted(false);
       game.setCurrentLevel(1);
       game.loadCurrentLevel();
       window.setLevelName(game.getLevelName());
