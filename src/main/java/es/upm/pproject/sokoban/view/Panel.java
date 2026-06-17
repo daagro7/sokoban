@@ -16,7 +16,6 @@ public class Panel extends JPanel {
 
     private Window window;
     private Board board; // Last board painted
-    private int currentLevel;
     private boolean completed;
 
     private int selectedOption;
@@ -276,9 +275,5 @@ public class Panel extends JPanel {
 
     public int getNumberOptions() {
         return window.getLevelPanel() == 0 ? STARTINGMENUOPTIONS.length : PAUSEMENUSTRING.length;
-    }
-
-    public void setCurrentLevel(int currentLevel) {
-        this.currentLevel = currentLevel;
     }
 }

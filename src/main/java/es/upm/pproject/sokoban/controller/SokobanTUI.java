@@ -44,7 +44,7 @@ public class SokobanTUI implements SokobanUI {
   public void loop() {
     Scanner scanner = new Scanner(System.in);
     int currentLevel = game.getCurrentLevel();
-    while (currentLevel < 6) {
+    while (currentLevel < 2) {
       System.out.println("Loading level " + currentLevel + "...");
       System.out.println("-------------------------------");
       game.loadCurrentLevel();
@@ -62,6 +62,7 @@ public class SokobanTUI implements SokobanUI {
           "Congratulations! You've completed the level " + currentLevel + " in "
               + game.getLevelSteps() + " steps.");
 
+      currentLevel++;
     }
 
     System.out.println("Congratulations! You've completed all the levels in the game in " + game.getGameSteps());
