@@ -217,16 +217,14 @@ public class SokobanGUI implements KeyListener, SokobanUI {
     }
   }
 
-  /* Not use in our game */
   @Override
   public void keyTyped(KeyEvent e) {
-    return;
+    // Not used in our game. Only needed the use of keyPressed method.
   }
 
-  /* Not use in our game */
   @Override
   public void keyReleased(KeyEvent e) {
-    return;
+    // Not used in our game. Only needed the use of keyPressed method.
   }
 
   @Override
