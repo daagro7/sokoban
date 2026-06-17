@@ -76,9 +76,10 @@ public class SokobanGUI implements KeyListener, SokobanUI {
 
   private void startingMenuOptions(int currentOption) {
     if (currentOption == 0) { // NEW GAME
+      game.setCurrentLevel(1);
       game.loadCurrentLevel();
-      window.newLevel(game.getCurrentLevel());
-      panel.setPanel(game.getBoard());
+      panel.setCurrentLevel(game.getCurrentLevel());
+      window.newLevel(-2);
     } else if (currentOption == 1) { // LOAD GAME
       // TODO: Load game logic
     } else if (currentOption == 2) { // EXIT
@@ -100,7 +101,7 @@ public class SokobanGUI implements KeyListener, SokobanUI {
       game.undoMove();
       levelMenuOptions(0);
     } else if (currentOption == 4) { // QUIT
-      game.setCurrentLevel(1);
+      // game.setCurrentLevel(1);
       window.newLevel(0);
       panel.setPanel(null);
       panel.setSelectedOption(0);
@@ -114,8 +115,16 @@ public class SokobanGUI implements KeyListener, SokobanUI {
 
     if (window.getLevelPanel() == 0) {
       startingMenuOptions(currentOption);
-    } else {
+    } else if (window.getLevelPanel() == -1) {
       levelMenuOptions(currentOption);
+    } else if (window.getLevelPanel() == -2) {
+      if (panel.isCompleted()) { // Game completed        
+        window.newLevel(0);
+        panel.setPanel(null);
+      } else { // Level completed
+        window.newLevel(game.getCurrentLevel());
+        panel.setPanel(game.getBoard());
+      }
     }
   }
 
@@ -158,10 +167,12 @@ public class SokobanGUI implements KeyListener, SokobanUI {
     if (!window.isMenu()) {
       window.updateSteps(game.getLevelSteps());
 
-      // If level complated update the window and panel to the next level
+      // If level completed update the window and panel to the next level
       if (game.levelCompleted()) {
-        window.newLevel(game.getCurrentLevel());
-        panel.setPanel(game.getBoard());
+        panel.setStepsOnGame(game.getGameSteps());
+        panel.setCurrentLevel(game.getCurrentLevel());
+        window.newLevel(-2);
+        panel.setPanel(null);
       }
     }
   }

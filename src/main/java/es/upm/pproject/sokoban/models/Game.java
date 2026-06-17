@@ -71,11 +71,11 @@ public class Game {
 
             stepsOnGame += levelManager.getStepsOnLevel();
             currentLevel++;
-            if (currentLevel >= 5) {
-                stepsOnGame += levelManager.getStepsOnLevel();
+            if (currentLevel > 1) {
+                // stepsOnGame += levelManager.getStepsOnLevel();
                 // logger.info("Congratulations! You've completed all the levels in the game in
                 // {} steps!", stepsOnGame + levelManager.getStepsOnLevel());
-                currentLevel = 1;
+                // currentLevel = 1;
                 // window.newLevel(0);
                 // panel.setPanel(null);
                 return true;

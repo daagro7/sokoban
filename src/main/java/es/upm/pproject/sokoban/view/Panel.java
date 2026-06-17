@@ -16,6 +16,8 @@ public class Panel extends JPanel {
 
     private Window window;
     private Board board; // Last board painted
+    private int currentLevel;
+    private int stepsOnGame;
 
     private int selectedOption;
     private final String sokobanString = "SOKOBAN";
@@ -38,6 +40,8 @@ public class Panel extends JPanel {
             drawStartingMenu(g);
         } else if (window.getLevelPanel() == -1) { // Level menu
             drawLevelMenu(g);
+        } else if (window.getLevelPanel() == -2) { // New Level/Congratulations
+            drawNewLevelPanel(g);
         } else if (window.getLevelPanel() > 0) { // Level board
             drawBoard(g);
         }
@@ -172,6 +176,50 @@ public class Panel extends JPanel {
         }
     }
 
+    public void drawNewLevelPanel(Graphics g) {
+        // Center the text
+        g.setColor(Color.BLACK);
+        g.setFont(new Font("SansSerif", Font.BOLD, 20));
+        FontMetrics metrics = g.getFontMetrics(g.getFontMetrics().getFont());
+        String[] text = {"", "", ""};
+        if (isCompleted()) {
+            text[0] = "Congratulations!";
+            text[1] = "You've completed all the levels in the game";
+            text[2] = "in " + stepsOnGame + " steps";
+        } else {
+            text[0] = "Level " + currentLevel;
+        }
+        String textPress = "<<<PRESS ENTER/SPACE>>>";
+        
+        int lineHeight = metrics.getHeight();
+        int spacing = 25;
+        int extraSeparator = 50;
+
+        int totalBlockHeight = (4 * lineHeight) + (2 * spacing) + extraSeparator;
+        int startY = (this.getHeight() - totalBlockHeight) / 2 + metrics.getAscent();
+
+        for (int i = 0; i < 3; i++) {
+            int currentY = startY + i * (lineHeight + spacing);
+            int textWidth = metrics.stringWidth(text[i]);
+            int centeredX = (this.getWidth() - textWidth) / 2;
+            g.drawString(text[i], centeredX, currentY);
+        }
+
+        int pressY;
+        if (text[1].isEmpty()) {
+            pressY = startY + (lineHeight + spacing) + extraSeparator;
+        } else {
+            pressY = startY + (3 * (lineHeight + spacing)) + extraSeparator;
+        }
+        int textWidth = metrics.stringWidth(textPress);
+        int centeredX = (this.getWidth() - textWidth) / 2;
+        g.drawString(textPress, centeredX, pressY);        
+    }
+
+    public boolean isCompleted() {
+        return currentLevel > 1 ? true : false;
+    }
+
     // Getters/Setters
     public void setPanel(Board newBoard) {
         int heigthPanel;
@@ -201,10 +249,6 @@ public class Panel extends JPanel {
         this.repaint();
     }
 
-    public Window getWindow() {
-        return this.window;
-    }
-
     public int getSelectedOption() {
         return this.selectedOption;
     }
@@ -215,5 +259,13 @@ public class Panel extends JPanel {
 
     public int getNumberOptions() {
         return window.getLevelPanel() == 0 ? startingMenuOptions.length : levelMenuOptions.length;
+    }
+
+    public void setCurrentLevel(int currentLevel) {
+        this.currentLevel = currentLevel;
+    }
+
+    public void setStepsOnGame(int steps) {
+        this.stepsOnGame = steps;
     }
 }
