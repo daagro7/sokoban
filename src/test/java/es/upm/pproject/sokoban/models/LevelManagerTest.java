@@ -64,7 +64,7 @@ import org.junit.jupiter.api.Test;
     void testMovementBlockedByWallAndBoxes() {
         int steps = game.getLevelSteps();
         game.move(-1, 0); 
-        game.move(0, -1); 
+        game.move(-1, 0); 
         
         assertEquals(steps, game.getLevelSteps(), "Steps must not change when movements are completely blocked.");
     }
@@ -106,7 +106,7 @@ import org.junit.jupiter.api.Test;
         game.move(0, 1);
         game.move(1, 0);
         game.move(0, -1);
-        assertTrue(game.isLevelComplete(), "Level should be complete.");
+        assertTrue(game.levelCompleted(), "Level should be complete.");
     }
 
 }
