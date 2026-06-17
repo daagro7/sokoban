@@ -16,7 +16,7 @@ public class Panel extends JPanel {
 
     private Window window;
     private Board board; // Last board painted
-    private int currentLevel;
+    private boolean completed;
 
     private int selectedOption;
     private static final String SOKOBANSTRING = "SOKOBAN";
@@ -27,6 +27,7 @@ public class Panel extends JPanel {
     public Panel(Window window) {
         this.window = window;
         this.setFocusable(true);
+        completed = false;
     }
 
     @Override
@@ -183,7 +184,7 @@ public class Panel extends JPanel {
         String text = "";
         String text1 = "";
         String text2 = "";
-        if (isCompleted()) {
+        if (this.completed) {
             text = "Congratulations!";
             text1 = "You've completed all the levels in the game";
             text2 = "in " + window.getStepsOnGame() + " steps";
@@ -193,7 +194,7 @@ public class Panel extends JPanel {
             text2 = "";
         }
         String textPress = "<<<PRESS ENTER/SPACE>>>";
-        
+
         int lineHeight = metrics.getHeight();
         int spacing = 25;
         int extraSeparator = 50;
@@ -207,7 +208,7 @@ public class Panel extends JPanel {
         int centeredX = (this.getWidth() - textWidth) / 2;
         g.drawString(text, centeredX, currentY);
 
-        if (isCompleted()){
+        if (this.completed) {
             // Second text
             currentY = startY + 2 * (lineHeight + spacing);
             textWidth = metrics.stringWidth(text1);
@@ -215,7 +216,7 @@ public class Panel extends JPanel {
             g.drawString(text1, centeredX, currentY);
 
             // Third text
-            currentY = startY + 3 *(lineHeight + spacing);
+            currentY = startY + 3 * (lineHeight + spacing);
             textWidth = metrics.stringWidth(text2);
             centeredX = (this.getWidth() - textWidth) / 2;
             g.drawString(text2, centeredX, currentY);
@@ -225,14 +226,14 @@ public class Panel extends JPanel {
             currentY = startY + lineHeight + spacing + extraSeparator;
         }
 
-        // Press enter/space text        
+        // Press enter/space text
         textWidth = metrics.stringWidth(textPress);
         centeredX = (this.getWidth() - textWidth) / 2;
-        g.drawString(textPress, centeredX, currentY);        
+        g.drawString(textPress, centeredX, currentY);
     }
 
-    public boolean isCompleted() {
-        return currentLevel > 2;
+    public void setCompleted(boolean completed) {
+        this.completed = completed;
     }
 
     // Getters/Setters
@@ -274,9 +275,5 @@ public class Panel extends JPanel {
 
     public int getNumberOptions() {
         return window.getLevelPanel() == 0 ? STARTINGMENUOPTIONS.length : PAUSEMENUSTRING.length;
-    }
-
-    public void setCurrentLevel(int currentLevel) {
-        this.currentLevel = currentLevel;
     }
 }
