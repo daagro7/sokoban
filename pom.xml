@@ -20,7 +20,7 @@
 
         <junit>5.6.2</junit>
         
-        <jacoco.version>0.8.6</jacoco.version>
+        <jacoco.version>0.8.11</jacoco.version>
         <sonar.scm.provider>git</sonar.scm.provider>
         <sonar.language>java</sonar.language>
 
