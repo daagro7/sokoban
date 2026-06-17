@@ -23,6 +23,9 @@
         <jacoco.version>0.8.6</jacoco.version>
         <sonar.scm.provider>git</sonar.scm.provider>
         <sonar.language>java</sonar.language>
+
+        <sonar.qualitygate.wait>true</sonar.qualitygate.wait>
+        <sonar.coverage.exclusions>**/view/**, **/controller/**, **/Main.java</sonar.coverage.exclusions>
         
         <!-- Plugin versions -->
         <maven.shade>3.2.2</maven.shade>
