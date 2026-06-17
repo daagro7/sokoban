@@ -47,13 +47,17 @@ public class SokobanTUI implements SokobanUI {
       logger.info("Loading level {}...", currentLevel);
       logger.info("-------------------------------");
       game.loadCurrentLevel();
-      logger.info(game.getBoard().toString());
+      if (logger.isInfoEnabled()) {
+        logger.info(game.getBoard().toString());
+      }
       while (!game.levelCompleted()) {
         logger.info("Enter your move (w/a/s/d to move, r to restart, u to undo) > ");
         String input = scanner.nextLine();
         keyboardInput(input.isEmpty() ? ' ' : input.charAt(0));
         logger.info("-------------------------------");
-        logger.info(game.getBoard().toString());
+        if (logger.isInfoEnabled()) {
+          logger.info(game.getBoard().toString());
+        }
       }
 
       logger.info("Level {} successfully completed in {} steps!", currentLevel, game.getLastLevelSteps());

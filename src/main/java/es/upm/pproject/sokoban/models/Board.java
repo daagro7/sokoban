@@ -27,16 +27,16 @@ public class Board {
     }
 
     public String toString() {
-        String result = "";
+        StringBuilder result = new StringBuilder();
         for (int row = 0; row < cellMap.length; row++) {
             for (int column = 0; column < cellMap[row].length; column++) {
-                result += cellMap[row][column].toString();
+                result.append(cellMap[row][column]);
             }
 
-            result += "\n";
+            result.append("\n");
         }
 
-        return result;
+        return result.toString();
     }
 
     public int getHeigth() {

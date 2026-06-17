@@ -12,7 +12,7 @@ public class Main {
     SokobanUI ui;
 
     // If users want tui or gui
-    if (args.length > 0 && args[0].equalsIgnoreCase("tui")) {
+    if (args.length > 0 && "tui".equalsIgnoreCase(args[0])) {
       ui = new SokobanTUI(game);
     } else {
       ui = new SokobanGUI(game);
