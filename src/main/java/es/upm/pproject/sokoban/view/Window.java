@@ -10,6 +10,7 @@ public class Window extends JFrame {
     private Panel panel;
     private JLabel text;
     private int levelPanel;
+    private int stepsOnGame;
 
     public Window() {
         panel = new Panel(this);
@@ -42,7 +43,9 @@ public class Window extends JFrame {
 
     public void updateSteps(int newStep) {
         if (levelPanel > 0) {
-            text.setText("Level: " + levelPanel + "  Steps: " + newStep);
+            text.setText("Level: " + levelPanel +
+            " Steps: " + newStep +
+            " Steps on game: " + stepsOnGame);
         }
         else {
             text.setText(" ");
@@ -52,7 +55,9 @@ public class Window extends JFrame {
     public void newLevel(int newLevel) {
         levelPanel = newLevel;
         if (levelPanel > 0) {
-            text.setText("Level: " + levelPanel + "  Steps: 0");
+            text.setText("Level: " + levelPanel +
+            " Steps: 0" +
+            " Steps on game: " + stepsOnGame);
         }
         else {
             text.setText(" ");
@@ -74,5 +79,13 @@ public class Window extends JFrame {
 
     public boolean isMenu(){
         return levelPanel <= 0;
+    }
+
+    public void setStepsOnGame(int steps) {
+        this.stepsOnGame = steps;
+    }
+
+    public int getStepsOnGame() {
+        return stepsOnGame;
     }
 }

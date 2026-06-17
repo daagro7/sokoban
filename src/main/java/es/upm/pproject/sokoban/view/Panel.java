@@ -17,7 +17,6 @@ public class Panel extends JPanel {
     private Window window;
     private Board board; // Last board painted
     private int currentLevel;
-    private int stepsOnGame;
 
     private int selectedOption;
     private final String sokobanString = "SOKOBAN";
@@ -185,7 +184,7 @@ public class Panel extends JPanel {
         if (isCompleted()) {
             text[0] = "Congratulations!";
             text[1] = "You've completed all the levels in the game";
-            text[2] = "in " + stepsOnGame + " steps";
+            text[2] = "in " + window.getStepsOnGame() + " steps";
         } else {
             text[0] = "Level " + currentLevel;
         }
@@ -217,7 +216,7 @@ public class Panel extends JPanel {
     }
 
     public boolean isCompleted() {
-        return currentLevel > 1 ? true : false;
+        return currentLevel > 2 ? true : false;
     }
 
     // Getters/Setters
@@ -263,9 +262,5 @@ public class Panel extends JPanel {
 
     public void setCurrentLevel(int currentLevel) {
         this.currentLevel = currentLevel;
-    }
-
-    public void setStepsOnGame(int steps) {
-        this.stepsOnGame = steps;
     }
 }

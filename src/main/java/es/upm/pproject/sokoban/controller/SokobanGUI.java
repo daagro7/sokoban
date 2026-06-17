@@ -79,6 +79,7 @@ public class SokobanGUI implements KeyListener, SokobanUI {
       game.setCurrentLevel(1);
       game.loadCurrentLevel();
       panel.setCurrentLevel(game.getCurrentLevel());
+      game.setStepsOnGame(0);
       window.newLevel(-2);
     } else if (currentOption == 1) { // LOAD GAME
       // TODO: Load game logic
@@ -113,11 +114,11 @@ public class SokobanGUI implements KeyListener, SokobanUI {
     if (!window.isMenu()) // Skip if not in menu
       return;
 
-    if (window.getLevelPanel() == 0) {
+    if (window.getLevelPanel() == 0) { // Starting menu
       startingMenuOptions(currentOption);
-    } else if (window.getLevelPanel() == -1) {
+    } else if (window.getLevelPanel() == -1) { // Pause menu
       levelMenuOptions(currentOption);
-    } else if (window.getLevelPanel() == -2) {
+    } else if (window.getLevelPanel() == -2) { // Level/Congratulations panel
       if (panel.isCompleted()) { // Game completed        
         window.newLevel(0);
         panel.setPanel(null);
@@ -165,6 +166,7 @@ public class SokobanGUI implements KeyListener, SokobanUI {
     panel.repaint();
 
     if (!window.isMenu()) {
+      window.setStepsOnGame(game.getGameSteps() + game.getLevelSteps());
       window.updateSteps(game.getLevelSteps());
 
       // If level completed update the window and panel to the next level

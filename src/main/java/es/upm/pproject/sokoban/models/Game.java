@@ -71,7 +71,7 @@ public class Game {
 
             stepsOnGame += levelManager.getStepsOnLevel();
             currentLevel++;
-            if (currentLevel > 1) {
+            if (currentLevel > 2) {
                 // stepsOnGame += levelManager.getStepsOnLevel();
                 // logger.info("Congratulations! You've completed all the levels in the game in
                 // {} steps!", stepsOnGame + levelManager.getStepsOnLevel());
@@ -89,4 +89,7 @@ public class Game {
         return false;
     }
 
+    public void setStepsOnGame(int steps) {
+        this.stepsOnGame = steps;
+    }
 }
