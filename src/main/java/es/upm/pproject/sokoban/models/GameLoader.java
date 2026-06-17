@@ -13,6 +13,11 @@ public class GameLoader {
 
   private static final Logger logger = LoggerFactory.getLogger(GameLoader.class);
 
+  // Private constructor to hide the implicit public one
+  private GameLoader() {
+    throw new IllegalStateException("Utility class");
+  }
+
   public static class SaveData {
     public int levelNumber;
     public int gamePoints;

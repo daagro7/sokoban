@@ -13,6 +13,11 @@ import java.util.List;
 public class GameSaver {
   private static final Logger logger = LoggerFactory.getLogger(GameSaver.class);
 
+  // Private constructor to hide the implicit public one
+  private GameSaver() {
+    throw new IllegalStateException("Utility class");
+  }
+
   public static void save(Game game, String filePath) {
     Path path = Paths.get(filePath);
     StringBuilder save = new StringBuilder();

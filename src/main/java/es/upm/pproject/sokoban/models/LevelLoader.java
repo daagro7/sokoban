@@ -10,10 +10,14 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
-import java.util.stream.Collectors;
 
 class LevelLoader {
   private static final Logger logger = LoggerFactory.getLogger(LevelLoader.class);
+
+  // Private constructor to hide the implicit public one
+  private LevelLoader() {
+    throw new IllegalStateException("Utility class");
+  }
 
   private static List<String> readLevelFiles(int i) {
     List<String> list = null;
@@ -25,7 +29,7 @@ class LevelLoader {
         return list;
       }
       try (BufferedReader reader = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8))) {
-        list = reader.lines().collect(Collectors.toList());
+        list = reader.lines().toList();
         return list;
       }
     } catch (IOException e) {
