@@ -46,28 +46,28 @@ class GameTest {
     }
 
     @Test
-    public void testLoadInvalidFileReturnsFalse() {
+    void testLoadInvalidFileReturnsFalse() {
         boolean result = game.loadGame("target/non_existent_save_file.txt");
         assertFalse(result, "Loading a non-existing file should return false cleanly.");
     }
 
     @Test
-    public void testGameInitialSteps() {
+    void testGameInitialSteps() {
         assertEquals(0, game.getGameSteps(), "Game steps should start at 0.");
     }
 
     @Test
-    public void testLevelCompletedReturnsFalseInitially() {
+    void testLevelCompletedReturnsFalseInitially() {
         assertFalse(game.levelCompleted(), "Level 1 should not be completed initially.");
     }
 
     @Test
-    public void testGetLevelName() {
+    void testGetLevelName() {
         assertEquals("Level 1", game.getLevelName(), "The level name should be parsed correctly.");
     }
 
     @Test
-    public void testTotalGoalsCount() {
+    void testTotalGoalsCount() {
         assertTrue(game.getTotalGoals() >= 0, "Total goals should be a valid non-negative number.");
     }
 
