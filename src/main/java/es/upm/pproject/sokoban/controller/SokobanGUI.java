@@ -92,7 +92,14 @@ public class SokobanGUI implements KeyListener, SokobanUI {
       panel.setPanel(this.game.getBoard());
     } else if (currentOption == 1) { // SAVE GAME
       // TODO: Save game logic
-    } else if (currentOption == 2) { // QUIT
+    } else if (currentOption == 2) { // RESTART LEVEL
+      game.restartLevel();
+      panel.setPanel(game.getBoard());
+      levelMenuOptions(0);
+    } else if (currentOption == 3) { // UNDO MOVEMENT
+      game.undoMove();
+      levelMenuOptions(0);
+    } else if (currentOption == 4) { // QUIT
       game.setCurrentLevel(1);
       window.newLevel(0);
       panel.setPanel(null);

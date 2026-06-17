@@ -21,7 +21,7 @@ public class Panel extends JPanel {
     private final String sokobanString = "SOKOBAN";
     private final String[] startingMenuOptions = { "NEW GAME", "LOAD GAME", "CLOSE SOKOBAN" };
     private final String menuString = "MENU";
-    private final String[] levelMenuOptions = { "RESUME", "SAVE GAME", "QUIT" };
+    private final String[] levelMenuOptions = { "RESUME", "SAVE GAME", "RESTART LEVEL", "UNDO MOVEMENT", "QUIT" };
 
     public Panel(Window window) {
         this.window = window;
@@ -144,7 +144,7 @@ public class Panel extends JPanel {
         int boxWidth = 220;
         int boxHeight = 50;
         int startX = (this.getWidth() - boxWidth) / 2;
-        int spacing = 30;
+        int spacing = 20;
         int totalMenuHeight = (levelMenuOptions.length * boxHeight) + ((levelMenuOptions.length - 1) * spacing);
         int startY = (this.getHeight() - totalMenuHeight) / 2;
 
