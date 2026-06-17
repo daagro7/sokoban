@@ -105,6 +105,8 @@ public class SokobanGUI implements KeyListener, SokobanUI {
       String filePath = fileToLoad.getAbsolutePath();
 
       if (game.loadGame(filePath)) {
+        window.setLevelName(game.getLevelName());
+        panel.setCurrentLevel(game.getCurrentLevel());
         window.newLevel(game.getCurrentLevel());
         panel.setPanel(game.getBoard());
         panel.repaint();
@@ -116,7 +118,7 @@ public class SokobanGUI implements KeyListener, SokobanUI {
     if (currentOption == 0) { // NEW GAME
       game.setCurrentLevel(1);
       game.loadCurrentLevel();
-      window.setLevelName(getLevelName());
+      window.setLevelName(game.getLevelName());
       panel.setCurrentLevel(game.getCurrentLevel());
       game.setStepsOnGame(0);
       window.newLevel(-2);
@@ -157,7 +159,7 @@ public class SokobanGUI implements KeyListener, SokobanUI {
     } else if (window.getLevelPanel() == -1) { // Pause menu
       levelMenuOptions(currentOption);
     } else if (window.getLevelPanel() == -2) { // Level/Congratulations panel
-      if (panel.isCompleted()) { // Game completed
+      if (game.isGameCompleted()) { // Game completed
         window.newLevel(0);
         panel.setPanel(null);
       } else { // Level completed
@@ -188,7 +190,7 @@ public class SokobanGUI implements KeyListener, SokobanUI {
       case KeyEvent.VK_U:
         handleU();
         break;
-      case  KeyEvent.VK_ENTER, KeyEvent.VK_SPACE:
+      case KeyEvent.VK_ENTER, KeyEvent.VK_SPACE:
         handleEnterOrSpace();
         break;
       case KeyEvent.VK_ESCAPE:
@@ -199,15 +201,17 @@ public class SokobanGUI implements KeyListener, SokobanUI {
     }
 
     panel.repaint();
-
     if (!window.isMenu()) {
       window.setStepsOnGame(game.getGameSteps() + game.getLevelSteps());
       window.updateSteps(game.getLevelSteps());
 
       // If level completed update the window and panel to the next level
       if (game.levelCompleted()) {
+        if (game.isGameCompleted())
+          panel.setCompleted(true);
+
         panel.setCurrentLevel(game.getCurrentLevel());
-        window.setLevelName(getLevelName());
+        window.setLevelName(game.getLevelName());
         window.newLevel(-2);
         panel.setPanel(null);
       }
@@ -231,7 +235,4 @@ public class SokobanGUI implements KeyListener, SokobanUI {
     window.newLevel(0);
   }
 
-  public String getLevelName() {
-    return game.getLevelName();
-  }
 }

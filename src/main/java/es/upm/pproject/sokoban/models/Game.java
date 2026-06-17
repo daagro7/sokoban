@@ -11,11 +11,13 @@ public class Game {
     private int currentLevel;
     private int stepsOnGame;
     private int lastLevelSteps;
+    private boolean isGameCompleted;
 
     public Game() {
         logger.info("Starting Sokoban game from level: {}", 1);
         currentLevel = 1;
         stepsOnGame = 0;
+        isGameCompleted = false;
     }
 
     // Getters
@@ -49,6 +51,10 @@ public class Game {
 
     public String getLevelName() {
         return levelManager.getLevelName();
+    }
+
+    public boolean isGameCompleted() {
+        return isGameCompleted;
     }
 
     // Setters
@@ -99,7 +105,10 @@ public class Game {
 
             lastLevelSteps = levelManager.getStepsOnLevel();
             stepsOnGame += levelManager.getStepsOnLevel();
-            loadNextLevel();
+            if (!loadNextLevel()) {
+                isGameCompleted = true;
+            }
+
             return true;
         }
 
