@@ -7,6 +7,9 @@ import java.awt.event.KeyListener;
 import es.upm.pproject.sokoban.view.Panel;
 import es.upm.pproject.sokoban.view.Window;
 
+import javax.swing.JFileChooser;
+import java.io.File;
+
 public class SokobanGUI implements KeyListener, SokobanUI {
   private Game game;
   private Window window;
@@ -74,6 +77,41 @@ public class SokobanGUI implements KeyListener, SokobanUI {
     }
   }
 
+  private void handleSaveGame() {
+    JFileChooser fileChooser = new JFileChooser();
+    fileChooser.setDialogTitle("Select where to save the game");
+
+    int selectedFile = fileChooser.showSaveDialog(window);
+    if (selectedFile == JFileChooser.APPROVE_OPTION) {
+      File fileToSave = fileChooser.getSelectedFile();
+      String filePath = fileToSave.getAbsolutePath();
+
+      if (!filePath.endsWith(".txt")) {
+        filePath += ".txt";
+      }
+
+      game.saveGame(filePath);
+      levelMenuOptions(0); // Resume game
+    }
+  }
+
+  private void handleLoadGame() {
+    JFileChooser fileChooser = new JFileChooser();
+    fileChooser.setDialogTitle("Select a game file to load");
+
+    int selectedFile = fileChooser.showOpenDialog(window);
+    if (selectedFile == JFileChooser.APPROVE_OPTION) {
+      File fileToLoad = fileChooser.getSelectedFile();
+      String filePath = fileToLoad.getAbsolutePath();
+
+      if (game.loadGame(filePath)) {
+        window.newLevel(game.getCurrentLevel());
+        panel.setPanel(game.getBoard());
+        panel.repaint();
+      }
+    }
+  }
+
   private void startingMenuOptions(int currentOption) {
     if (currentOption == 0) { // NEW GAME
       game.setCurrentLevel(1);
@@ -82,7 +120,7 @@ public class SokobanGUI implements KeyListener, SokobanUI {
       game.setStepsOnGame(0);
       window.newLevel(-2);
     } else if (currentOption == 1) { // LOAD GAME
-      // TODO: Load game logic
+      handleLoadGame();
     } else if (currentOption == 2) { // EXIT
       window.closeApplication();
     }
@@ -93,7 +131,7 @@ public class SokobanGUI implements KeyListener, SokobanUI {
       window.newLevel(this.game.getCurrentLevel());
       panel.setPanel(this.game.getBoard());
     } else if (currentOption == 1) { // SAVE GAME
-      // TODO: Save game logic
+      handleSaveGame();
     } else if (currentOption == 2) { // RESTART LEVEL
       game.restartLevel();
       panel.setPanel(game.getBoard());
@@ -119,7 +157,7 @@ public class SokobanGUI implements KeyListener, SokobanUI {
     } else if (window.getLevelPanel() == -1) { // Pause menu
       levelMenuOptions(currentOption);
     } else if (window.getLevelPanel() == -2) { // Level/Congratulations panel
-      if (panel.isCompleted()) { // Game completed        
+      if (panel.isCompleted()) { // Game completed
         window.newLevel(0);
         panel.setPanel(null);
       } else { // Level completed
@@ -129,7 +167,6 @@ public class SokobanGUI implements KeyListener, SokobanUI {
     }
   }
 
-  // Entrada de teclas de la GUI
   @Override
   public void keyPressed(KeyEvent e) {
     switch (e.getKeyCode()) {
@@ -180,10 +217,12 @@ public class SokobanGUI implements KeyListener, SokobanUI {
 
   @Override
   public void keyTyped(KeyEvent e) {
+    return;
   }
 
   @Override
   public void keyReleased(KeyEvent e) {
+    return;
   }
 
   @Override

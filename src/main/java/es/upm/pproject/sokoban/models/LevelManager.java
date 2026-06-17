@@ -4,6 +4,9 @@ import es.upm.pproject.sokoban.models.Cell.CellType;
 
 import java.util.Deque;
 import java.util.ArrayDeque;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.Collections;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -177,6 +180,12 @@ public class LevelManager {
 
   public Board getBoard() {
     return board;
+  }
+
+  public List<State> getMovementHistory() {
+    List<State> hist = new ArrayList<>(movementHistory);
+    Collections.reverse(hist);
+    return hist;
   }
 
   public State getPrevState() {
