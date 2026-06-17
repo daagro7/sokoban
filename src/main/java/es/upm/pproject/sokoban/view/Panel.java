@@ -38,7 +38,7 @@ public class Panel extends JPanel {
         if (window.getLevelPanel() == 0) { // Starting menu
             drawStartingMenu(g);
         } else if (window.getLevelPanel() == -1) { // Level menu
-            drawLevelMenu(g);
+            drawPauseMenu(g);
         } else if (window.getLevelPanel() == -2) { // New Level/Congratulations
             drawNewLevelPanel(g);
         } else if (window.getLevelPanel() > 0) { // Level board
@@ -132,7 +132,7 @@ public class Panel extends JPanel {
         }
     }
 
-    public void drawLevelMenu(Graphics g) {
+    public void drawPauseMenu(Graphics g) {
         // Menu title
         // Center the text on the option box
         g.setColor(Color.BLACK);
@@ -180,13 +180,17 @@ public class Panel extends JPanel {
         g.setColor(Color.BLACK);
         g.setFont(new Font("SansSerif", Font.BOLD, 20));
         FontMetrics metrics = g.getFontMetrics(g.getFontMetrics().getFont());
-        String[] text = {"", "", ""};
+        String text = "";
+        String text1 = "";
+        String text2 = "";
         if (isCompleted()) {
-            text[0] = "Congratulations!";
-            text[1] = "You've completed all the levels in the game";
-            text[2] = "in " + window.getStepsOnGame() + " steps";
+            text = "Congratulations!";
+            text1 = "You've completed all the levels in the game";
+            text2 = "in " + window.getStepsOnGame() + " steps";
         } else {
-            text[0] = "Level " + currentLevel;
+            text = window.getLevelName();
+            text1 = "";
+            text2 = "";
         }
         String textPress = "<<<PRESS ENTER/SPACE>>>";
         
@@ -195,24 +199,36 @@ public class Panel extends JPanel {
         int extraSeparator = 50;
 
         int totalBlockHeight = (4 * lineHeight) + (2 * spacing) + extraSeparator;
-        int startY = (this.getHeight() - totalBlockHeight) / 2 + metrics.getAscent();
+        int startY = (this.getHeight() - totalBlockHeight) / 2 - 50;
 
-        for (int i = 0; i < 3; i++) {
-            int currentY = startY + i * (lineHeight + spacing);
-            int textWidth = metrics.stringWidth(text[i]);
-            int centeredX = (this.getWidth() - textWidth) / 2;
-            g.drawString(text[i], centeredX, currentY);
-        }
-
-        int pressY;
-        if (text[1].isEmpty()) {
-            pressY = startY + (lineHeight + spacing) + extraSeparator;
-        } else {
-            pressY = startY + (3 * (lineHeight + spacing)) + extraSeparator;
-        }
-        int textWidth = metrics.stringWidth(textPress);
+        // First text
+        int currentY = startY + (lineHeight + spacing);
+        int textWidth = metrics.stringWidth(text);
         int centeredX = (this.getWidth() - textWidth) / 2;
-        g.drawString(textPress, centeredX, pressY);        
+        g.drawString(text, centeredX, currentY);
+
+        if (isCompleted()){
+            // Second text
+            currentY = startY + 2 * (lineHeight + spacing);
+            textWidth = metrics.stringWidth(text1);
+            centeredX = (this.getWidth() - textWidth) / 2;
+            g.drawString(text1, centeredX, currentY);
+
+            // Third text
+            currentY = startY + 3 *(lineHeight + spacing);
+            textWidth = metrics.stringWidth(text2);
+            centeredX = (this.getWidth() - textWidth) / 2;
+            g.drawString(text2, centeredX, currentY);
+
+            currentY += extraSeparator;
+        } else {
+            currentY = startY + lineHeight + spacing + extraSeparator;
+        }
+
+        // Press enter/space text        
+        textWidth = metrics.stringWidth(textPress);
+        centeredX = (this.getWidth() - textWidth) / 2;
+        g.drawString(textPress, centeredX, currentY);        
     }
 
     public boolean isCompleted() {
