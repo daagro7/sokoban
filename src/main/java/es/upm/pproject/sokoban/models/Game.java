@@ -11,11 +11,13 @@ public class Game {
     private int currentLevel;
     private int stepsOnGame;
     private int lastLevelSteps;
+    private boolean isGameCompleted;
 
     public Game() {
         logger.info("Starting Sokoban game from level: {}", 1);
         currentLevel = 1;
         stepsOnGame = 0;
+        isGameCompleted = false;
     }
 
     // Getters
@@ -51,6 +53,10 @@ public class Game {
         return levelManager.getLevelName();
     }
 
+    public boolean isGameCompleted() {
+        return isGameCompleted;
+    }
+
     // Setters
     public void setCurrentLevel(int level) {
         currentLevel = level;
@@ -58,6 +64,10 @@ public class Game {
 
     public void setStepsOnGame(int steps) {
         this.stepsOnGame = steps;
+    }
+
+    public void setGameCompleted(boolean completed) {
+        isGameCompleted = completed;
     }
 
     // Movemente and interaction
@@ -99,7 +109,10 @@ public class Game {
 
             lastLevelSteps = levelManager.getStepsOnLevel();
             stepsOnGame += levelManager.getStepsOnLevel();
-            loadNextLevel();
+            if (!loadNextLevel()) {
+                isGameCompleted = true;
+            }
+
             return true;
         }
 
@@ -135,6 +148,8 @@ public class Game {
                     logger.warn("Unknown movement character '{}' when loading game.", move);
             }
         }
+
+        this.isGameCompleted = false;
 
         logger.info("Game loaded successfully from file: {}", filePath);
         return true;
