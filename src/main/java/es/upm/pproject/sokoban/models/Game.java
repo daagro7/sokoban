@@ -99,7 +99,7 @@ public class Game {
 
             lastLevelSteps = levelManager.getStepsOnLevel();
             stepsOnGame += levelManager.getStepsOnLevel();
-
+            loadNextLevel();
             return true;
         }
 

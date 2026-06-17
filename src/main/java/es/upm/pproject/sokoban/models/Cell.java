@@ -1,7 +1,7 @@
 package es.upm.pproject.sokoban.models;
 
 public class Cell {
-    public static enum CellType {
+    public enum CellType {
         EMPTY,
         WALL,
         WAREHOUSE_MAN,

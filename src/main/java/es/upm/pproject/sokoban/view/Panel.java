@@ -12,17 +12,17 @@ import java.awt.Graphics;
 
 public class Panel extends JPanel {
 
-    private final int CELL_SIZE = 65;
+    private static final int CELL_SIZE = 65;
 
     private Window window;
     private Board board; // Last board painted
     private int currentLevel;
 
     private int selectedOption;
-    private final String sokobanString = "SOKOBAN";
-    private final String[] startingMenuOptions = { "NEW GAME", "LOAD GAME", "CLOSE SOKOBAN" };
-    private final String menuString = "MENU";
-    private final String[] levelMenuOptions = { "RESUME", "SAVE GAME", "RESTART LEVEL", "UNDO MOVEMENT", "QUIT" };
+    private static final String SOKOBANSTRING = "SOKOBAN";
+    private static final String[] STARTINGMENUOPTIONS = { "NEW GAME", "LOAD GAME", "CLOSE SOKOBAN" };
+    private static final String MENUSTRING = "MENU";
+    private static final String[] PAUSEMENUSTRING = { "RESUME", "SAVE GAME", "RESTART LEVEL", "UNDO MOVEMENT", "QUIT" };
 
     public Panel(Window window) {
         this.window = window;
@@ -95,22 +95,22 @@ public class Panel extends JPanel {
         g.setColor(Color.BLACK);
         g.setFont(new Font("SansSerif", Font.BOLD, 32));
         FontMetrics metrics = g.getFontMetrics(g.getFontMetrics().getFont());
-        int textWidth = metrics.stringWidth(sokobanString);
+        int textWidth = metrics.stringWidth(SOKOBANSTRING);
         int centeredX = (this.getWidth() - textWidth) / 2;
 
-        g.drawString(sokobanString, centeredX, 80);
+        g.drawString(SOKOBANSTRING, centeredX, 80);
 
         // Boxes configuration
         int boxWidth = 220;
         int boxHeight = 50;
         int startX = (this.getWidth() - boxWidth) / 2;
         int spacing = 30;
-        int totalMenuHeight = (startingMenuOptions.length * boxHeight) + ((startingMenuOptions.length - 1) * spacing);
+        int totalMenuHeight = (STARTINGMENUOPTIONS.length * boxHeight) + ((STARTINGMENUOPTIONS.length - 1) * spacing);
         int startY = (this.getHeight() - totalMenuHeight) / 2;
 
         g.setFont(new Font("SansSerif", Font.BOLD, 18));
 
-        for (int i = 0; i < startingMenuOptions.length; i++) {
+        for (int i = 0; i < STARTINGMENUOPTIONS.length; i++) {
             int currentY = startY + i * (boxHeight + spacing);
 
             // Efect of the selected option to the boxes
@@ -123,12 +123,12 @@ public class Panel extends JPanel {
 
             // Center the text on the option box
             metrics = g.getFontMetrics(g.getFontMetrics().getFont());
-            textWidth = metrics.stringWidth(startingMenuOptions[i]);
+            textWidth = metrics.stringWidth(STARTINGMENUOPTIONS[i]);
             centeredX = (this.getWidth() - textWidth) / 2;
 
             // Draw the text on the panel
             g.setColor(Color.WHITE);
-            g.drawString(startingMenuOptions[i], centeredX, currentY + 32);
+            g.drawString(STARTINGMENUOPTIONS[i], centeredX, currentY + 32);
         }
     }
 
@@ -138,22 +138,22 @@ public class Panel extends JPanel {
         g.setColor(Color.BLACK);
         g.setFont(new Font("SansSerif", Font.BOLD, 32));
         FontMetrics metrics = g.getFontMetrics(g.getFontMetrics().getFont());
-        int textWidth = metrics.stringWidth(menuString);
+        int textWidth = metrics.stringWidth(MENUSTRING);
         int centeredX = (this.getWidth() - textWidth) / 2;
 
-        g.drawString(menuString, centeredX, 80);
+        g.drawString(MENUSTRING, centeredX, 80);
 
         // Boxes configuration
         int boxWidth = 220;
         int boxHeight = 50;
         int startX = (this.getWidth() - boxWidth) / 2;
         int spacing = 20;
-        int totalMenuHeight = (levelMenuOptions.length * boxHeight) + ((levelMenuOptions.length - 1) * spacing);
+        int totalMenuHeight = (PAUSEMENUSTRING.length * boxHeight) + ((PAUSEMENUSTRING.length - 1) * spacing);
         int startY = (this.getHeight() - totalMenuHeight) / 2;
 
         g.setFont(new Font("SansSerif", Font.BOLD, 18));
 
-        for (int i = 0; i < levelMenuOptions.length; i++) {
+        for (int i = 0; i < PAUSEMENUSTRING.length; i++) {
             int currentY = startY + i * (boxHeight + spacing);
 
             // Efect of the selected option to the boxes
@@ -166,12 +166,12 @@ public class Panel extends JPanel {
 
             // Center the text on the option box
             metrics = g.getFontMetrics(g.getFontMetrics().getFont());
-            textWidth = metrics.stringWidth(levelMenuOptions[i]);
+            textWidth = metrics.stringWidth(PAUSEMENUSTRING[i]);
             centeredX = (this.getWidth() - textWidth) / 2;
 
             // Draw the text on the panel
             g.setColor(Color.WHITE);
-            g.drawString(levelMenuOptions[i], centeredX, currentY + 32);
+            g.drawString(PAUSEMENUSTRING[i], centeredX, currentY + 32);
         }
     }
 
@@ -232,7 +232,7 @@ public class Panel extends JPanel {
     }
 
     public boolean isCompleted() {
-        return currentLevel > 2 ? true : false;
+        return currentLevel > 2;
     }
 
     // Getters/Setters
@@ -273,7 +273,7 @@ public class Panel extends JPanel {
     }
 
     public int getNumberOptions() {
-        return window.getLevelPanel() == 0 ? startingMenuOptions.length : levelMenuOptions.length;
+        return window.getLevelPanel() == 0 ? STARTINGMENUOPTIONS.length : PAUSEMENUSTRING.length;
     }
 
     public void setCurrentLevel(int currentLevel) {

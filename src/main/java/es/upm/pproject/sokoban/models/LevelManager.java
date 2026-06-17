@@ -17,7 +17,6 @@ public class LevelManager {
   Board board;
   WarehouseMan warehouseMan;
   int totalGoals;
-  // int totalBoxes;
   int stepsOnLevel;
   Deque<State> movementHistory;
 
@@ -70,8 +69,7 @@ public class LevelManager {
     int newX = x + dirX;
     int newY = y + dirY;
     switch (board.getCell(newX, newY).getCellType()) {
-      case EMPTY:
-      case GOAL_POSITION:
+      case EMPTY, GOAL_POSITION:
         // Move the box to the new position
         executeBoxMovement(x, y, dirX, dirY);
 
@@ -95,8 +93,7 @@ public class LevelManager {
     PosChange posWMan = new PosChange(warehouseMan.getX(), warehouseMan.getY(), newX, newY);
     String direction = getDirectionName(dirX, dirY);
     switch (board.getCell(newX, newY).getCellType()) {
-      case EMPTY:
-      case GOAL_POSITION:
+      case EMPTY, GOAL_POSITION:
         State stateWMan = new State(posWMan);
         executeWManMovement(dirX, dirY);
         stepsOnLevel++;

@@ -8,7 +8,7 @@ import es.upm.pproject.sokoban.models.Game;
 
 public class SokobanTUI implements SokobanUI {
   private static final Logger logger = LoggerFactory.getLogger(SokobanTUI.class);
-  public Game game;
+  private Game game;
 
   public SokobanTUI(Game game) {
     this.game = game;

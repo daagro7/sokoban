@@ -141,7 +141,6 @@ public class SokobanGUI implements KeyListener, SokobanUI {
       game.undoMove();
       levelMenuOptions(0);
     } else if (currentOption == 4) { // QUIT
-      // game.setCurrentLevel(1);
       window.newLevel(0);
       panel.setPanel(null);
       panel.setSelectedOption(0);
@@ -189,9 +188,7 @@ public class SokobanGUI implements KeyListener, SokobanUI {
       case KeyEvent.VK_U:
         handleU();
         break;
-
-      case KeyEvent.VK_ENTER:
-      case KeyEvent.VK_SPACE:
+      case  KeyEvent.VK_ENTER, KeyEvent.VK_SPACE:
         handleEnterOrSpace();
         break;
       case KeyEvent.VK_ESCAPE:

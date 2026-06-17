@@ -2,7 +2,8 @@ package es.upm.pproject.sokoban.models;
 
 public class WarehouseMan {
 
-    int x, y;
+    private int x;
+    private int y;
 
     public WarehouseMan(int x, int y) {
         this.x = x;

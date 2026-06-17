@@ -1,30 +1,32 @@
 package es.upm.pproject.sokoban.models;
 
 public class PosChange {
-    private int previous_x, previous_y;
-    private int next_x, next_y;
+    private int previousX;
+    private int previousY;
+    private int nextX;
+    private int nextY;
 
 
     public PosChange(int prevX, int prevY, int nextX, int nextY) {
-        this.previous_x = prevX;
-        this.previous_y = prevY;
-        this.next_x = nextX;
-        this.next_y = nextY;
+        this.previousX = prevX;
+        this.previousY = prevY;
+        this.nextX = nextX;
+        this.nextY = nextY;
     }
 
     public int getPreviousX() {
-        return previous_x;
+        return previousX;
     }
 
     public int getPreviousY() {
-        return previous_y;
+        return previousY;
     }
 
     public int getNextX() {
-        return next_x;
+        return nextX;
     }
 
     public int getNextY() {
-        return next_y;
+        return nextY;
     }
 }
