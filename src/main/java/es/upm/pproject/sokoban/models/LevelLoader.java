@@ -52,6 +52,7 @@ class LevelLoader {
     }
 
     int width = 0, height = 0;
+    String levelName = levelLines.get(0).trim();
     try {
       String[] dimensions = levelLines.get(1).split(",");
       height = Integer.parseInt(dimensions[0]);
@@ -135,6 +136,6 @@ class LevelLoader {
     logger.info("Level {} successfully loaded. Dimensions: {}x{}. Total boxes/goals: {}", num, width, height,
         totalGoals);
 
-    return new LevelManager(board, warehouseMan, totalGoals);
+    return new LevelManager(levelName, board, warehouseMan, totalGoals);
   }
 }

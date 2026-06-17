@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 
 public class LevelManager {
   private static final Logger logger = LoggerFactory.getLogger(LevelManager.class);
+  String levelName;
   Board board;
   WarehouseMan warehouseMan;
   int totalGoals;
@@ -20,7 +21,8 @@ public class LevelManager {
   int stepsOnLevel;
   Deque<State> movementHistory;
 
-  public LevelManager(Board board, WarehouseMan warehouseMan, int totalGoals) {
+  public LevelManager(String levelName, Board board, WarehouseMan warehouseMan, int totalGoals) {
+    this.levelName = levelName;
     this.totalGoals = totalGoals;
     this.stepsOnLevel = 0;
     this.board = board;
@@ -195,5 +197,9 @@ public class LevelManager {
       return null;
     }
     return movementHistory.pop();
+  }
+
+  public String getLevelName() {
+    return levelName;
   }
 }

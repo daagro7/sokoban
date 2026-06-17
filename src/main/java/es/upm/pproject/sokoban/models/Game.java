@@ -47,6 +47,10 @@ public class Game {
         return levelManager.getMovementHistory();
     }
 
+    public String getLevelName() {
+        return levelManager.getLevelName();
+    }
+
     // Setters
     public void setCurrentLevel(int level) {
         currentLevel = level;
