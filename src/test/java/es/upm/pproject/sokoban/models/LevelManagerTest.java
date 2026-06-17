@@ -71,7 +71,6 @@ import org.junit.jupiter.api.Test;
 
     @Test
     void testCompleteLevel() {
-        
         game.move(1, 0); 
         game.move(0, -1); 
         game.move(1, 0); 

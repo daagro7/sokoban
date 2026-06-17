@@ -71,4 +71,63 @@ class GameTest {
         assertTrue(game.getTotalGoals() >= 0, "Total goals should be a valid non-negative number.");
     }
 
+    @Test
+    public void testLoadNextLevelSuccessfully() {
+        assertEquals(1, game.getCurrentLevel());
+        boolean result = game.loadNextLevel();
+        assertTrue(result, "Should successfully load the next level.");
+        assertEquals(2, game.getCurrentLevel(), "Current level should increment to 2.");
+    }
+
+    @Test
+    public void testLoadNextLevelExhaustedReturnsFalse() {
+        assertEquals(1, game.getCurrentLevel());
+        while (game.loadNextLevel()) {
+        }
+        assertFalse(game.loadNextLevel(), "Attempting to load past the final level must return false.");
+    }
+
+
+    @Test
+    public void testMoveBoxOutOfGoalIncrementsTotalGoals() {
+        game.loadNextLevel();
+        int initialGoals = game.getTotalGoals();
+        game.move(0, -1); 
+        game.move(-1, 0);
+        game.move(-1, 0);
+        game.move(-1, 0);
+        game.move(0, -1); 
+        game.move(0, -1); 
+        game.move(0, -1); 
+        game.move(-1, 0);
+        game.move(0, -1); 
+        game.move(-1, 0);
+        game.move(-1, 0);
+        game.move(0, 1);
+        game.move(-1, 0);
+        game.move(-1, 0);
+        game.move(0, 1);
+        game.move(0, 1);
+        game.move(0, 1);
+        game.move(1, 0);
+        game.move(1, 0);
+        game.move(1, 0);
+        game.move(1, 0);
+        game.move(1, 0);
+        game.move(1, 0);
+        game.move(1, 0);
+        game.move(1, 0);
+        game.move(1, 0);
+        game.move(1, 0);
+        game.move(1, 0);
+        game.move(1, 0);
+        assertEquals(initialGoals-1, game.getTotalGoals(), "Total goals should decrement when a box is in a goal.");
+        game.move(0, 1);
+        game.move(1, 0);
+        game.move(1, 0);
+        game.move(0, -1);
+        game.move(-1, 0);
+        assertEquals(initialGoals, game.getTotalGoals(), "Initial goals should remain the same when a box is moved out of a goal.");
+    }
+
 }
