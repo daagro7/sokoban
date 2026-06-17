@@ -171,7 +171,6 @@ public class SokobanGUI implements KeyListener, SokobanUI {
 
       // If level completed update the window and panel to the next level
       if (game.levelCompleted()) {
-        panel.setStepsOnGame(game.getGameSteps());
         panel.setCurrentLevel(game.getCurrentLevel());
         window.newLevel(-2);
         panel.setPanel(null);
