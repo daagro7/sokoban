@@ -74,19 +74,31 @@ public class Game {
         levelManager = LevelLoader.loadLevel(currentLevel);
     }
 
+    // Load next level, skipping any wrong formatted levels
+    public boolean loadNextLevel() {
+        try {
+            currentLevel++;
+            while ((levelManager = LevelLoader.loadLevel(currentLevel)) == null) {
+                currentLevel++;
+            }
+
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
     // Game state
     public boolean levelCompleted() {
         if (levelManager.getTotalGoals() == 0) {
             logger.info("Level {} successfully completed in {} steps!", currentLevel, levelManager.getStepsOnLevel());
 
+            lastLevelSteps = levelManager.getStepsOnLevel();
             stepsOnGame += levelManager.getStepsOnLevel();
-            currentLevel++;
-            if (currentLevel > 2) {
+            if (!loadNextLevel()) {
                 return true;
             }
 
-            lastLevelSteps = levelManager.getStepsOnLevel();
-            levelManager = LevelLoader.loadLevel(currentLevel);
             return true;
         }
 

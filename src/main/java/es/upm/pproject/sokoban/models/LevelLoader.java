@@ -1,46 +1,54 @@
 package es.upm.pproject.sokoban.models;
 
 import es.upm.pproject.sokoban.models.Cell.CellType;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.BufferedReader;
 import java.io.IOException;
-import java.nio.file.Files;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
-import java.nio.file.Path;
+import java.util.stream.Collectors;
 
 class LevelLoader {
   private static final Logger logger = LoggerFactory.getLogger(LevelLoader.class);
 
   private static List<String> readLevelFiles(int i) {
-    String levelPath = "src/main/java/es/upm/pproject/sokoban/levels/Level" + i + ".txt";
-    Path ruta = Path.of(levelPath);
-    List<String> lineas = null;
+    String levelPath = "/levels/level_" + i + ".txt";
 
-    try {
-      lineas = Files.readAllLines(ruta);
-
+    try (InputStream is = LevelLoader.class.getResourceAsStream(levelPath)) {
+      if (is == null) {
+        logger.error("Failed to find level file at path: {}", levelPath);
+        return null;
+      }
+      try (BufferedReader reader = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8))) {
+        return reader.lines().collect(Collectors.toList());
+      }
     } catch (IOException e) {
       logger.error("Failed to read level file at path: {}", levelPath, e);
+      return null;
     }
-
-    return lineas;
   }
 
   public static LevelManager loadLevel(int num) {
     List<String> levelLines = null;
     try {
-      // TODO: SI SE LEE DEBE IR AL SIGUIENTE NIVEL
       levelLines = readLevelFiles(num);
     } catch (Exception e) {
       logger.error("Error loading level: {}", num, e);
       System.exit(1);
     }
 
-    if (levelLines == null || levelLines.size() < 3) {
+    if (levelLines == null) {
+      logger.error("Level error: Level file not found for level: {}", num);
+      throw new IllegalArgumentException("Level file not found for level: " + num);
+    }
+
+    if (levelLines.size() < 3) {
       logger.error("Level error: Not enough lines in level: {}", num);
-      System.exit(1);
+      return null;
     }
 
     int width = 0, height = 0;
@@ -50,12 +58,12 @@ class LevelLoader {
       width = Integer.parseInt(dimensions[1]);
     } catch (NumberFormatException | ArrayIndexOutOfBoundsException e) {
       logger.error("Invalid level dimensions in level: {}", num, e);
-      System.exit(1);
+      return null;
     }
 
     if (levelLines.size() < height + 2) {
       logger.error("Level error: Not enough lines for the specified height ({}) in level: {}", height, num);
-      System.exit(1);
+      return null;
     }
 
     Board board = new Board(width, height);
@@ -83,7 +91,6 @@ class LevelLoader {
                 logger.error("Level error: Multiple warehouse men found in level: {}", num);
                 System.exit(1);
               }
-
               cellType = CellType.WAREHOUSE_MAN;
               warehouseMan = new WarehouseMan(column, row);
               warehouseManFound = true;
@@ -101,30 +108,28 @@ class LevelLoader {
                   cellChar, row, column, num);
               cellType = CellType.ERROR;
               break;
-
           }
-
           board.setCell(column, row, cellType);
         }
       }
     } catch (IndexOutOfBoundsException e) {
       logger.error("Level error: dimensions provided do not match the map in level: {}", num);
-      System.exit(1);
+      return null;
     }
 
     if (!warehouseManFound) {
       logger.error("Level error: No warehouse man found in level: {}", num);
-      System.exit(1);
+      return null;
     }
 
     if (boxCount != totalGoals) {
       logger.error("Level error: Number of boxes does not match number of goals, level: {}", num);
-      System.exit(1);
+      return null;
     }
 
     if (boxCount == 0 && totalGoals == 0) {
       logger.error("Level error: No boxes or goals found in level: {}", num);
-      System.exit(1);
+      return null;
     }
 
     logger.info("Level {} successfully loaded. Dimensions: {}x{}. Total boxes/goals: {}", num, width, height,
