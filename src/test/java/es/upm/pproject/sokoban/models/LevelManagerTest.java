@@ -4,24 +4,24 @@ import static org.junit.jupiter.api.Assertions.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-public class LevelManagerTest {
+ class LevelManagerTest {
     private Game game;
 
     @BeforeEach   // Inicializamos el juego y cargamos el nivel 1 limpio antes de cada test
-    public void setUp() {
+    void setUp() {
         game = new Game();
         game.loadCurrentLevel();
     }
 
    @Test
-    public void testInitialState() {
+    void testInitialState() {
         assertNotNull(game.getBoard(), "The board should be loaded.");
         assertEquals(1, game.getCurrentLevel(), "Should start at level 1.");
         assertEquals(0, game.getLevelSteps(), "Steps should initially be 0.");
     }
 
     @Test
-    public void testMoveValidRight() {
+    void testMoveValidRight() {
         // En el nivel 1, a la derecha (1, 0) el WarehouseMan puede moverse.
         // Como game.move es void, llamamos al método y luego comprobamos si sumó el paso.
         game.move(1, 0);
@@ -29,7 +29,7 @@ public class LevelManagerTest {
     }
 
     @Test
-    public void testMoveHitWallLeft() {
+    void testMoveHitWallLeft() {
         // En el nivel 1, a la izquierda (-1, 0) hay un muro. 
         // El movimiento debe bloquearse y los pasos deben seguir en 0.
         game.move(-1, 0);
