@@ -16,19 +16,21 @@ class LevelLoader {
   private static final Logger logger = LoggerFactory.getLogger(LevelLoader.class);
 
   private static List<String> readLevelFiles(int i) {
+    List<String> list = null;
     String levelPath = "/levels/level_" + i + ".txt";
 
     try (InputStream is = LevelLoader.class.getResourceAsStream(levelPath)) {
       if (is == null) {
         logger.error("Failed to find level file at path: {}", levelPath);
-        return null;
+        return list;
       }
       try (BufferedReader reader = new BufferedReader(new InputStreamReader(is, StandardCharsets.UTF_8))) {
-        return reader.lines().collect(Collectors.toList());
+        list = reader.lines().collect(Collectors.toList());
+        return list;
       }
     } catch (IOException e) {
       logger.error("Failed to read level file at path: {}", levelPath, e);
-      return null;
+      return list;
     }
   }
 
@@ -51,7 +53,8 @@ class LevelLoader {
       return null;
     }
 
-    int width = 0, height = 0;
+    int width = 0;
+    int height = 0;
     String levelName = levelLines.get(0).trim();
     try {
       String[] dimensions = levelLines.get(1).split(",");

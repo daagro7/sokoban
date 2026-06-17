@@ -19,6 +19,7 @@ public class LevelManager {
   int totalGoals;
   int stepsOnLevel;
   Deque<State> movementHistory;
+  private static final String STEPSUPDATED = "Warehouse man steps updated: {}";
 
   public LevelManager(String levelName, Board board, WarehouseMan warehouseMan, int totalGoals) {
     this.levelName = levelName;
@@ -97,7 +98,7 @@ public class LevelManager {
         State stateWMan = new State(posWMan);
         executeWManMovement(dirX, dirY);
         stepsOnLevel++;
-        logger.debug("Warehouse man steps updated: {}", stepsOnLevel);
+        logger.debug(STEPSUPDATED, stepsOnLevel);
         logger.debug("Warehouse man moved to the {}", direction);
         movementHistory.push(stateWMan);
         return true;
@@ -113,7 +114,7 @@ public class LevelManager {
           // Move the warehouse man to the new position
           executeWManMovement(dirX, dirY);
           stepsOnLevel++;
-          logger.debug("Warehouse man steps updated: {}", stepsOnLevel);
+          logger.debug(STEPSUPDATED, stepsOnLevel);
           logger.info("Warehouse man successfully pushed a box to the {}", direction);
           movementHistory.push(stateWManBox);
           return true;
@@ -139,7 +140,7 @@ public class LevelManager {
     int reverseDirY = posWMan.getPreviousY() - posWMan.getNextY();
     executeWManMovement(reverseDirX, reverseDirY);
     stepsOnLevel -= 1;
-    logger.info("Warehouse man steps updated: {}", stepsOnLevel);
+    logger.info(STEPSUPDATED, stepsOnLevel);
 
     PosChange posBox = state.getBox();
     if (posBox != null) {
@@ -189,7 +190,6 @@ public class LevelManager {
 
   public State getPrevState() {
     if (movementHistory.peek() == null) {
-      System.out.println("No movement have been done previously at this level");
       logger.info("No movement have been done previously at this level");
       return null;
     }

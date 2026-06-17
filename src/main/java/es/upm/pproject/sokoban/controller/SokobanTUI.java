@@ -36,7 +36,6 @@ public class SokobanTUI implements SokobanUI {
         game.undoMove();
         break;
       default:
-        System.out.println("Invalid input");
         logger.warn("Invalid input.");
     }
   }
@@ -45,27 +44,24 @@ public class SokobanTUI implements SokobanUI {
     Scanner scanner = new Scanner(System.in);
     int currentLevel = game.getCurrentLevel();
     while (currentLevel < 2) {
-      System.out.println("Loading level " + currentLevel + "...");
-      System.out.println("-------------------------------");
+      logger.info("Loading level {}...", currentLevel);
+      logger.info("-------------------------------");
       game.loadCurrentLevel();
-      System.out.println(game.getBoard());
+      logger.info(game.getBoard().toString());
       while (!game.levelCompleted()) {
-        System.out.println("Enter your move (w/a/s/d to move, r to restart, u to undo) > ");
+        logger.info("Enter your move (w/a/s/d to move, r to restart, u to undo) > ");
         String input = scanner.nextLine();
         keyboardInput(input.isEmpty() ? ' ' : input.charAt(0));
-        System.out.println("-------------------------------");
-        System.out.println(game.getBoard());
+        logger.info("-------------------------------");
+        logger.info(game.getBoard().toString());
       }
 
       logger.info("Level {} successfully completed in {} steps!", currentLevel, game.getLastLevelSteps());
-      System.out.println(
-          "Congratulations! You've completed the level " + currentLevel + " in "
-              + game.getLevelSteps() + " steps.");
 
       currentLevel++;
     }
 
-    System.out.println("Congratulations! You've completed all the levels in the game in " + game.getGameSteps());
+    logger.info("Congratulations! You've completed all the levels in the game in {}", game.getGameSteps());
     scanner.close();
   }
 

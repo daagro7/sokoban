@@ -9,7 +9,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.List;
-import java.lang.StringBuilder;
 
 public class GameSaver {
   private static final Logger logger = LoggerFactory.getLogger(GameSaver.class);
@@ -23,8 +22,8 @@ public class GameSaver {
     List<State> movementHistory = game.getMovementHistory();
 
     // Fill save text
-    save.append(String.format("%d\n", levelName));
-    save.append(String.format("%d\n", gamePoints));
+    save.append(String.format("%d%n", levelName));
+    save.append(String.format("%d%n", gamePoints));
     for (State s : movementHistory) {
       PosChange wManChange = s.getWMan();
       int dirx = wManChange.getNextX() - wManChange.getPreviousX();

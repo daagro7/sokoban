@@ -15,10 +15,11 @@ public class Panel extends JPanel {
     private static final int CELL_SIZE = 65;
 
     private Window window;
-    private Board board; // Last board painted
+    private transient Board board; // Last board painted
     private boolean completed;
 
     private int selectedOption;
+    private static final String FONTTYPE = "SansSerif";
     private static final String SOKOBANSTRING = "SOKOBAN";
     private static final String[] STARTINGMENUOPTIONS = { "NEW GAME", "LOAD GAME", "CLOSE SOKOBAN" };
     private static final String MENUSTRING = "MENU";
@@ -94,7 +95,7 @@ public class Panel extends JPanel {
         // Menu title
         // Center the text on the option box
         g.setColor(Color.BLACK);
-        g.setFont(new Font("SansSerif", Font.BOLD, 32));
+        g.setFont(new Font(FONTTYPE, Font.BOLD, 32));
         FontMetrics metrics = g.getFontMetrics(g.getFontMetrics().getFont());
         int textWidth = metrics.stringWidth(SOKOBANSTRING);
         int centeredX = (this.getWidth() - textWidth) / 2;
@@ -109,7 +110,7 @@ public class Panel extends JPanel {
         int totalMenuHeight = (STARTINGMENUOPTIONS.length * boxHeight) + ((STARTINGMENUOPTIONS.length - 1) * spacing);
         int startY = (this.getHeight() - totalMenuHeight) / 2;
 
-        g.setFont(new Font("SansSerif", Font.BOLD, 18));
+        g.setFont(new Font(FONTTYPE, Font.BOLD, 18));
 
         for (int i = 0; i < STARTINGMENUOPTIONS.length; i++) {
             int currentY = startY + i * (boxHeight + spacing);
@@ -137,7 +138,7 @@ public class Panel extends JPanel {
         // Menu title
         // Center the text on the option box
         g.setColor(Color.BLACK);
-        g.setFont(new Font("SansSerif", Font.BOLD, 32));
+        g.setFont(new Font(FONTTYPE, Font.BOLD, 32));
         FontMetrics metrics = g.getFontMetrics(g.getFontMetrics().getFont());
         int textWidth = metrics.stringWidth(MENUSTRING);
         int centeredX = (this.getWidth() - textWidth) / 2;
@@ -152,7 +153,7 @@ public class Panel extends JPanel {
         int totalMenuHeight = (PAUSEMENUSTRING.length * boxHeight) + ((PAUSEMENUSTRING.length - 1) * spacing);
         int startY = (this.getHeight() - totalMenuHeight) / 2;
 
-        g.setFont(new Font("SansSerif", Font.BOLD, 18));
+        g.setFont(new Font(FONTTYPE, Font.BOLD, 18));
 
         for (int i = 0; i < PAUSEMENUSTRING.length; i++) {
             int currentY = startY + i * (boxHeight + spacing);
@@ -179,7 +180,7 @@ public class Panel extends JPanel {
     public void drawNewLevelPanel(Graphics g) {
         // Center the text
         g.setColor(Color.BLACK);
-        g.setFont(new Font("SansSerif", Font.BOLD, 20));
+        g.setFont(new Font(FONTTYPE, Font.BOLD, 20));
         FontMetrics metrics = g.getFontMetrics(g.getFontMetrics().getFont());
         String text = "";
         String text1 = "";
@@ -255,9 +256,9 @@ public class Panel extends JPanel {
 
         setPreferredSize(new Dimension(widthPanel, heigthPanel));
         // If the panels is in a JFrame, it adaps the size and centers the window
-        if (this.getTopLevelAncestor() instanceof JFrame) {
-            ((JFrame) this.getTopLevelAncestor()).pack();
-            ((JFrame) this.getTopLevelAncestor()).setLocationRelativeTo(null);
+        if (this.getTopLevelAncestor() instanceof JFrame jframe) {
+            jframe.pack();
+            jframe.setLocationRelativeTo(null);
         }
 
         // Repaint the board

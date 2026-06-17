@@ -2,6 +2,8 @@ package es.upm.pproject.sokoban.view;
 
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.WindowConstants;
+import javax.swing.SwingConstants;
 import java.awt.BorderLayout;
 import java.awt.Font;
 
@@ -20,7 +22,7 @@ public class Window extends JFrame {
         this.add(panel);
         
         this.setTitle("Sokoban"); // Window title
-        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // To close the window clicking 'X'
+        this.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE); // To close the window clicking 'X'
         this.setResizable(false); // The user cannot resize the window
         
         // Adapt the size of the window to the panel size and centers if
@@ -31,7 +33,7 @@ public class Window extends JFrame {
         setLayout(new BorderLayout());
 
         // Create the text tag
-        text = new JLabel(" ", JLabel.CENTER);
+        text = new JLabel(" ", SwingConstants.CENTER);
         text.setFont(new Font("Serif", Font.PLAIN, 18));
 
         add(text, BorderLayout.NORTH);
