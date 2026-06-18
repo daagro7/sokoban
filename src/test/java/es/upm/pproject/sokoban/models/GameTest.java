@@ -340,4 +340,12 @@ class GameTest {
         assertFalse(boardString.isEmpty(), "El string del tablero no debe estar vacío.");
     }
 
+    @Test
+    void testCellToStringDefaultAndErrorCoverage() {
+        es.upm.pproject.sokoban.models.Cell errorCell = new es.upm.pproject.sokoban.models.Cell(es.upm.pproject.sokoban.models.Cell.CellType.ERROR);
+        String result = errorCell.toString();
+        assertEquals("?", result, "El toString de una celda de tipo ERROR debe retornar '?'");
+    }
+
+
 }
