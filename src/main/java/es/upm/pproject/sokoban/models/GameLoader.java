@@ -27,9 +27,9 @@ public class GameLoader {
    * Class representing the data loaded from a save file.
    */
   public static class SaveData {
-    public int levelNumber;
-    public int gamePoints;
-    public String movements;
+    public final int levelNumber;
+    public final int gamePoints;
+    public final String movements;
 
     /**
      * Constructs a SaveData instance

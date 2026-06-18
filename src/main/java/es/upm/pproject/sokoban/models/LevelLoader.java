@@ -91,6 +91,21 @@ class LevelLoader {
       return null;
     }
 
+    return buildLevelManager(levelLines, num, width, height, levelName);
+  }
+
+  /**
+   * Builds a LevelManager instance from the level lines.
+   *
+   * @param levelLines list of lines from the level file
+   * @param num        level number
+   * @param width      width of the level
+   * @param height     height of the level
+   * @param levelName  name of the level
+   * @return LevelManager instance for the level, null if error
+   */
+  private static LevelManager buildLevelManager(List<String> levelLines, int num, int width, int height,
+      String levelName) {
     Board board = new Board(width, height);
     WarehouseMan warehouseMan = null;
     int boxCount = 0;
@@ -142,18 +157,7 @@ class LevelLoader {
       return null;
     }
 
-    if (!warehouseManFound) {
-      logger.error("Level error: No warehouse man found in level: {}", num);
-      return null;
-    }
-
-    if (boxCount != totalGoals) {
-      logger.error("Level error: Number of boxes does not match number of goals, level: {}", num);
-      return null;
-    }
-
-    if (boxCount == 0 && totalGoals == 0) {
-      logger.error("Level error: No boxes or goals found in level: {}", num);
+    if (!isValidLevel(warehouseManFound, boxCount, totalGoals, num)) {
       return null;
     }
 
@@ -161,5 +165,25 @@ class LevelLoader {
         totalGoals);
 
     return new LevelManager(levelName, board, warehouseMan, totalGoals);
+
+  }
+
+  private static boolean isValidLevel(boolean warehouseManFound, int boxCount, int totalGoals, int num) {
+    if (!warehouseManFound) {
+      logger.error("Level error: No warehouse man found in level: {}", num);
+      return false;
+    }
+
+    if (boxCount != totalGoals) {
+      logger.error("Level error: Number of boxes does not match number of goals, level: {}", num);
+      return false;
+    }
+
+    if (boxCount == 0) { // No boxes or goals found
+      logger.error("Level error: No boxes or goals found in level: {}", num);
+      return false;
+    }
+
+    return true;
   }
 }
