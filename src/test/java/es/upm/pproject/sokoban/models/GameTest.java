@@ -382,7 +382,7 @@ class GameTest {
     }
 
     @Test
-    public void testGameSaverMovementUP() throws Exception {
+    void testGameSaverMovementUP() throws Exception {
         game.setCurrentLevel(1);
         game.loadCurrentLevel();
         game.move(0, -1); 
@@ -397,7 +397,7 @@ class GameTest {
     }
 
     @Test
-    public void testGameSaverMovementDOWN() throws Exception {
+    void testGameSaverMovementDOWN() throws Exception {
         game.setCurrentLevel(1);
         game.loadCurrentLevel();
         game.move(0, 1); 
@@ -412,7 +412,7 @@ class GameTest {
     }
 
     @Test
-    public void testGameSaverMovementLEFT() throws Exception {
+    void testGameSaverMovementLEFT() throws Exception {
         game.setCurrentLevel(1);
         game.loadCurrentLevel();
         game.move(1, 0); 
@@ -428,7 +428,7 @@ class GameTest {
     }
 
     @Test
-    public void testGameSaverMovementRIGHT() throws Exception {
+    void testGameSaverMovementRIGHT() throws Exception {
         game.setCurrentLevel(1);
         game.loadCurrentLevel();
         game.move(1, 0); 
@@ -443,10 +443,66 @@ class GameTest {
     }
 
     @Test
-    public void testGameSaverExceptionCatchBlock() {
+    void testGameSaverExceptionCatchBlock() {
         String invalidPath = "/directory_does_not_exist_1234/_??_invalid_file.sav";
         GameSaver.save(game, invalidPath);
         assertNotNull(game);
+    }
+
+    @Test
+    void testWarehouseManSetPositionCoverage() {
+        WarehouseMan player = new WarehouseMan(0, 0);
+        assertEquals(0, player.getX());
+        assertEquals(0, player.getY());
+        player.setPosition(5, 8);
+        assertEquals(5, player.getX(), "La coordenada X debería haber cambiado a 5.");
+        assertEquals(8, player.getY(), "La coordenada Y debería haber cambiado a 8.");
+    }
+
+    @Test
+    void testLevelLoaderNotEnoughLinesLessThanThree() {
+        assertNull(LevelLoader.loadLevel(91), "Debería retornar null por falta de líneas básicas.");
+    }
+
+    @Test
+    void testLevelLoaderNotEnoughLinesForHeight() {
+        assertNull(LevelLoader.loadLevel(92), "Debería retornar null porque no hay líneas suficientes para la altura.");
+    }
+
+   /*  @Test    Da fallo porque el método System.exit(1) termina la ejecución del test, no se puede capturar con assertThrows.
+    void testLevelLoaderMultipleWarehouseMenSystemExit() {
+        try {
+            LevelLoader.loadLevel(93);
+        } catch (Throwable t) {
+        }
+        assertNotNull(game);
+    }*/
+
+    @Test
+    void testLevelLoaderFileNotFoundIOException() {
+        assertThrows(IllegalArgumentException.class, () -> {
+            LevelLoader.loadLevel(999);
+        }, "Cargar un nivel inexistente debe lanzar IllegalArgumentException.");
+    }
+
+    @Test
+    void testLevelLoaderInvalidCharacterCaseDefault() {
+        assertNull(LevelLoader.loadLevel(94), "Debería retornar null al contener caracteres inválidos.");
+    }
+
+    @Test
+    void testLevelLoaderIndexOutOfBoundsExceptionDimensions() {
+        assertNull(LevelLoader.loadLevel(95), "Debería retornar null al lanzar IndexOutOfBoundsException.");
+    }
+
+    @Test
+    void testLevelLoaderBoxCountNotEqualsTotalGoals() {
+        assertNull(LevelLoader.loadLevel(96), "Debería retornar null si el número de cajas y metas no coincide.");
+    }
+
+    @Test
+    void testLevelLoaderNoBoxesOrGoalsFound() {
+        assertNull(LevelLoader.loadLevel(97), "Debería retornar null si no hay cajas ni metas en el mapa.");
     }
 
 
