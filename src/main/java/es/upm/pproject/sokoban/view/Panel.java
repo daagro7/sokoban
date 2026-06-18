@@ -10,8 +10,12 @@ import java.awt.Dimension;
 import java.awt.Color;
 import java.awt.Graphics;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 public class Panel extends JPanel {
 
+    private static final Logger logger = LoggerFactory.getLogger(Panel.class);
     private static final int CELL_SIZE = 65;
 
     private Window window;
@@ -34,6 +38,7 @@ public class Panel extends JPanel {
         this.window = window;
         this.setFocusable(true);
         completed = false;
+        logger.info("Sokoban view Panel initialized successfully.");
     }
 
     /**
@@ -48,12 +53,16 @@ public class Panel extends JPanel {
         g.setColor(Color.GREEN);
 
         if (window.getLevelPanel() == 0) { // Starting menu
+            logger.info("Drawing starting menu.");
             drawStartingMenu(g);
         } else if (window.getLevelPanel() == -1) { // Level menu
+            logger.info("Drawing pause menu.");
             drawPauseMenu(g);
         } else if (window.getLevelPanel() == -2) { // New Level/Congratulations
+            logger.info("Drawing new level panel.");
             drawNewLevelPanel(g);
         } else if (window.getLevelPanel() > 0) { // Level board
+            logger.info("Drawing level board.");
             drawBoard(g);
         }
     }
@@ -64,6 +73,7 @@ public class Panel extends JPanel {
      * @param g graphics context
      */
     public void drawBoard(Graphics g) {
+        logger.info("Drawing game board.");
         for (int heigth = 0; heigth < board.getHeigth(); heigth++) {
             for (int width = 0; width < board.getWidth(); width++) {
 
@@ -272,6 +282,7 @@ public class Panel extends JPanel {
      */
     public void setCompleted(boolean completed) {
         this.completed = completed;
+        logger.info("Game completed status set to: {}", completed);
     }
 
     /**
@@ -287,13 +298,16 @@ public class Panel extends JPanel {
         if (window.getLevelPanel() <= 0) { // Menus panel size
             heigthPanel = 10 * CELL_SIZE;
             widthPanel = 10 * CELL_SIZE;
+            logger.debug("Setting panel to menu mode with size {}x{}.", widthPanel, heigthPanel);
         } else { // Board panel size
                  // Added new board
             board = newBoard;
+            logger.debug("Setting panel to board mode for level {}.", window.getLevelPanel());
 
             // Dimensions for the panel
             heigthPanel = board.getHeigth() * CELL_SIZE;
             widthPanel = board.getWidth() * CELL_SIZE;
+            logger.debug("Board panel dimensions set to {}x{}.", widthPanel, heigthPanel);
         }
 
         setPreferredSize(new Dimension(widthPanel, heigthPanel));

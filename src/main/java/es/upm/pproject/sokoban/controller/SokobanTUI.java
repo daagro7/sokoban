@@ -20,6 +20,7 @@ public class SokobanTUI implements SokobanUI {
    */
   public SokobanTUI(Game game) {
     this.game = game;
+    logger.info("SokobanTUI initialized.");
   }
 
   /**
@@ -29,24 +30,31 @@ public class SokobanTUI implements SokobanUI {
    * @param input character input
    */
   private void keyboardInput(char input) {
+    logger.debug("Processing input '{}'.", input);
     switch (input) {
       case 'w':
+        logger.debug("Moving player up from TUI input.");
         game.move(0, -1);
         break;
       case 's':
+        logger.debug("Moving player down from TUI input.");
         game.move(0, 1);
         break;
       case 'a':
+        logger.debug("Moving player left from TUI input.");
         game.move(-1, 0);
         break;
       case 'd':
+        logger.debug("Moving player right from TUI input.");
         game.move(1, 0);
         break;
       case 'r':
+        logger.info("Restarting level from TUI input.");
         game.restartLevel();
         logger.info("Level restarted.");
         break;
       case 'u':
+        logger.info("Undoing last movement from TUI input.");
         game.undoMove();
         break;
       default:
@@ -61,6 +69,7 @@ public class SokobanTUI implements SokobanUI {
   public void loop() {
     Scanner scanner = new Scanner(System.in);
     int currentLevel = game.getCurrentLevel();
+    logger.info("Starting TUI loop at level {}.", currentLevel);
     while (currentLevel <= 1) {
       logger.info("Loading level {}...", currentLevel);
       logger.info("-------------------------------");
@@ -71,6 +80,7 @@ public class SokobanTUI implements SokobanUI {
       while (!game.levelCompleted()) {
         logger.info("Enter your move (w/a/s/d to move, r to restart, u to undo) > ");
         String input = scanner.nextLine();
+        logger.debug("Raw input received: {}", input);
         keyboardInput(input.isEmpty() ? ' ' : input.charAt(0));
         logger.info("-------------------------------");
         if (logger.isInfoEnabled()) {
@@ -79,11 +89,13 @@ public class SokobanTUI implements SokobanUI {
       }
 
       logger.info("Level {} successfully completed in {} steps!", currentLevel, game.getLastLevelSteps());
+      logger.debug("Advancing from level {} to level {}.", currentLevel, currentLevel + 1);
 
       currentLevel++;
     }
 
     logger.info("Congratulations! You've completed all the levels in the game in {}", game.getGameSteps());
+    logger.info("TUI loop finished.");
     scanner.close();
   }
 

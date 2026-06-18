@@ -7,10 +7,15 @@ import javax.swing.SwingConstants;
 import java.awt.BorderLayout;
 import java.awt.Font;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * Main window of the Sokoban game
  */
 public class Window extends JFrame {
+
+    private static final Logger logger = LoggerFactory.getLogger(Window.class);
 
     private Panel panel;
     private JLabel text;
@@ -22,6 +27,8 @@ public class Window extends JFrame {
      * Constructs a Window for the Sokoban game.
      */
     public Window() {
+        logger.info("Initializing Sokoban main window.");
+
         panel = new Panel(this);
 
         // Add the panel into the window
@@ -47,6 +54,7 @@ public class Window extends JFrame {
 
         // Make the window visible
         this.setVisible(true);
+        logger.info("Sokoban main window initialized and visible.");
     }
 
     /**
@@ -59,8 +67,11 @@ public class Window extends JFrame {
             text.setText(levelName +
                     " | Steps: " + newStep +
                     " | Total steps: " + stepsOnGame);
+            logger.debug("Window steps updated for level {}: level steps={}, total steps={}.",
+                    levelPanel, newStep, stepsOnGame);
         } else {
             text.setText(" ");
+            logger.debug("Window steps cleared because the current panel is not a level board.");
         }
     }
 
@@ -75,8 +86,10 @@ public class Window extends JFrame {
             text.setText(levelName +
                     " | Steps: 0" +
                     " | Total steps: " + stepsOnGame);
+            logger.info("Window switched to level {}.", levelPanel);
         } else {
             text.setText(" ");
+            logger.info("Window switched to non-level panel {}.", levelPanel);
         }
     }
 
@@ -84,6 +97,7 @@ public class Window extends JFrame {
      * Closes the application window.
      */
     public void closeApplication() {
+        logger.info("Closing Sokoban main window.");
         this.dispose();
     }
 
@@ -123,6 +137,7 @@ public class Window extends JFrame {
      */
     public void setStepsOnGame(int steps) {
         this.stepsOnGame = steps;
+        logger.debug("Total game steps updated to {}.", steps);
     }
 
     /**
@@ -141,6 +156,7 @@ public class Window extends JFrame {
      */
     public void setLevelName(String levelName) {
         this.levelName = levelName;
+        logger.debug("Current level name updated to {}.", levelName);
     }
 
     /**

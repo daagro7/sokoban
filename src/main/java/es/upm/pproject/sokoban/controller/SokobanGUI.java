@@ -10,10 +10,15 @@ import es.upm.pproject.sokoban.view.Window;
 import javax.swing.JFileChooser;
 import java.io.File;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * A GUI for the Sokoban game.
  */
 public class SokobanGUI implements KeyListener, SokobanUI {
+  private static final Logger logger = LoggerFactory.getLogger(SokobanGUI.class);
+
   private Game game;
   private Window window;
   private Panel panel;
@@ -25,10 +30,12 @@ public class SokobanGUI implements KeyListener, SokobanUI {
    */
   public SokobanGUI(Game game) {
     this.game = game;
+    logger.info("Initializing SokobanGUI.");
     this.window = new Window();
     this.panel = window.getPanel();
 
     this.panel.addKeyListener(this);
+    logger.info("SokobanGUI initialized and key listener attached.");
   }
 
   /**
@@ -41,7 +48,9 @@ public class SokobanGUI implements KeyListener, SokobanUI {
       // Move to the option above or the lasta one
       currentOption = (currentOption > 0 ? currentOption - 1 : panel.getNumberOptions() - 1);
       panel.setSelectedOption(currentOption);
+      logger.debug("Menu selection moved up to option {}.", currentOption);
     } else {
+      logger.debug("Moving player up.");
       game.move(0, -1);
     }
   }
@@ -56,7 +65,9 @@ public class SokobanGUI implements KeyListener, SokobanUI {
       // Move to the option below or the first one
       currentOption = (currentOption < panel.getNumberOptions() - 1 ? currentOption + 1 : 0);
       panel.setSelectedOption(currentOption);
+      logger.debug("Menu selection moved down to option {}.", currentOption);
     } else {
+      logger.debug("Moving player down.");
       game.move(0, 1);
     }
   }
@@ -65,16 +76,20 @@ public class SokobanGUI implements KeyListener, SokobanUI {
    * Handles the a key input, moving in the game.
    */
   private void handleA() {
-    if (!window.isMenu())
+    if (!window.isMenu()) {
+      logger.debug("Moving player left.");
       game.move(-1, 0);
+    }
   }
 
   /**
    * Handles the d key input, moving in the game.
    */
   private void handleD() {
-    if (!window.isMenu())
+    if (!window.isMenu()) {
+      logger.debug("Moving player right.");
       game.move(1, 0);
+    }
   }
 
   /**
@@ -82,6 +97,7 @@ public class SokobanGUI implements KeyListener, SokobanUI {
    */
   private void handleR() {
     if (!window.isMenu()) {
+      logger.info("Restarting current level from keyboard input.");
       game.restartLevel();
       panel.setPanel(game.getBoard());
     }
@@ -91,8 +107,10 @@ public class SokobanGUI implements KeyListener, SokobanUI {
    * Handles the u key input, undo to the last move in the game.
    */
   private void handleU() {
-    if (!window.isMenu())
+    if (!window.isMenu()) {
+      logger.info("Undoing last movement from keyboard input.");
       game.undoMove();
+    }
   }
 
   /**
@@ -100,6 +118,7 @@ public class SokobanGUI implements KeyListener, SokobanUI {
    */
   private void handleEscape() {
     if (!window.isMenu()) {
+      logger.info("Opening pause menu.");
       window.newLevel(-1);
       panel.setPanel(null);
       panel.setSelectedOption(0);
@@ -122,10 +141,13 @@ public class SokobanGUI implements KeyListener, SokobanUI {
         filePath += ".txt";
       }
 
+      logger.info("Saving game to {}.", filePath);
       game.saveGame(filePath);
       window.newLevel(this.game.getCurrentLevel());
       panel.setPanel(this.game.getBoard());
       panel.repaint();
+    } else {
+      logger.debug("Save game dialog cancelled.");
     }
   }
 
@@ -141,13 +163,19 @@ public class SokobanGUI implements KeyListener, SokobanUI {
       File fileToLoad = fileChooser.getSelectedFile();
       String filePath = fileToLoad.getAbsolutePath();
 
+      logger.info("Loading game from {}.", filePath);
+
       if (game.loadGame(filePath)) {
         panel.setCompleted(false);
         window.setLevelName(game.getLevelName());
         window.newLevel(game.getCurrentLevel());
         panel.setPanel(game.getBoard());
         panel.repaint();
+      } else {
+        logger.warn("Game load failed for {}.", filePath);
       }
+    } else {
+      logger.debug("Load game dialog cancelled.");
     }
   }
 
@@ -158,6 +186,7 @@ public class SokobanGUI implements KeyListener, SokobanUI {
    */
   private void startingMenuOptions(int currentOption) {
     if (currentOption == 0) { // NEW GAME
+      logger.info("Starting a new game from the main menu.");
       game.setGameCompleted(false);
       panel.setCompleted(false);
       game.setCurrentLevel(1);
@@ -166,8 +195,10 @@ public class SokobanGUI implements KeyListener, SokobanUI {
       game.setStepsOnGame(0);
       window.newLevel(-2);
     } else if (currentOption == 1) { // LOAD GAME
+      logger.info("Opening load game dialog from the main menu.");
       handleLoadGame();
     } else if (currentOption == 2) { // EXIT
+      logger.info("Exiting game from the main menu.");
       window.closeApplication();
     }
   }
@@ -179,18 +210,23 @@ public class SokobanGUI implements KeyListener, SokobanUI {
    */
   private void levelMenuOptions(int currentOption) {
     if (currentOption == 0) { // RESUME
+      logger.info("Resuming current level.");
       window.newLevel(this.game.getCurrentLevel());
       panel.setPanel(this.game.getBoard());
     } else if (currentOption == 1) { // SAVE GAME
+      logger.info("Opening save game dialog from pause menu.");
       handleSaveGame();
     } else if (currentOption == 2) { // RESTART LEVEL
+      logger.info("Restarting current level from pause menu.");
       game.restartLevel();
       panel.setPanel(game.getBoard());
       levelMenuOptions(0);
     } else if (currentOption == 3) { // UNDO MOVEMENT
+      logger.info("Undoing movement from pause menu.");
       game.undoMove();
       levelMenuOptions(0);
     } else if (currentOption == 4) { // QUIT
+      logger.info("Returning to main menu from pause menu.");
       window.newLevel(0);
       panel.setPanel(null);
       panel.setSelectedOption(0);
@@ -207,14 +243,19 @@ public class SokobanGUI implements KeyListener, SokobanUI {
       return;
 
     if (window.getLevelPanel() == 0) { // Starting menu
+      logger.debug("Enter/space pressed in main menu with selected option {}.", currentOption);
       startingMenuOptions(currentOption);
     } else if (window.getLevelPanel() == -1) { // Pause menu
+      logger.debug("Enter/space pressed in pause menu with selected option {}.", currentOption);
       levelMenuOptions(currentOption);
     } else if (window.getLevelPanel() == -2) { // Level/Congratulations panel
+      logger.debug("Enter/space pressed in level-completed panel.");
       if (game.isGameCompleted()) { // Game completed
+        logger.info("All levels completed. Returning to main menu.");
         window.newLevel(0);
         panel.setPanel(null);
       } else { // Level completed
+        logger.info("Proceeding to next level {}.", game.getCurrentLevel());
         window.newLevel(game.getCurrentLevel());
         panel.setPanel(game.getBoard());
       }
@@ -228,6 +269,7 @@ public class SokobanGUI implements KeyListener, SokobanUI {
    */
   @Override
   public void keyPressed(KeyEvent e) {
+    logger.debug("Key pressed: {}.", KeyEvent.getKeyText(e.getKeyCode()));
     switch (e.getKeyCode()) {
       case KeyEvent.VK_W:
         handleW();
@@ -260,11 +302,13 @@ public class SokobanGUI implements KeyListener, SokobanUI {
     // Update the panel and window after each turn if not in menu
     panel.repaint();
     if (!window.isMenu()) {
+      logger.debug("Refreshing window state after gameplay input.");
       window.setStepsOnGame(game.getGameSteps() + game.getLevelSteps());
       window.updateSteps(game.getLevelSteps());
 
       // If level completed update the window and panel to the next level
       if (game.levelCompleted()) {
+        logger.info("Level {} completed.", game.getCurrentLevel());
         if (game.isGameCompleted())
           panel.setCompleted(true);
 
@@ -291,6 +335,7 @@ public class SokobanGUI implements KeyListener, SokobanUI {
   @Override
   public void start() {
     // There is no need for loop, just start the game
+    logger.info("Starting Sokoban GUI flow.");
     panel.setPanel(null);
     window.newLevel(0);
   }
