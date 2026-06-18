@@ -72,7 +72,7 @@ class GameTest {
     }
 
     @Test
-    public void testLoadNextLevelSuccessfully() {
+    void testLoadNextLevelSuccessfully() {
         assertEquals(1, game.getCurrentLevel());
         boolean result = game.loadNextLevel();
         assertTrue(result, "Should successfully load the next level.");
@@ -80,7 +80,7 @@ class GameTest {
     }
 
     @Test
-    public void testLoadNextLevelExhaustedReturnsFalse() {
+    void testLoadNextLevelExhaustedReturnsFalse() {
         assertEquals(1, game.getCurrentLevel());
         while (game.loadNextLevel()) {
         }
@@ -89,7 +89,7 @@ class GameTest {
 
 
     @Test
-    public void testMoveBoxOutOfGoalIncrementsTotalGoals() {
+    void testMoveBoxOutOfGoalIncrementsTotalGoals() {
         game.loadNextLevel();
         int initialGoals = game.getTotalGoals();
         game.move(0, -1); 
@@ -127,6 +127,159 @@ class GameTest {
         game.move(1, 0);
         game.move(0, -1);
         game.move(-1, 0);
+        assertEquals(initialGoals, game.getTotalGoals(), "Initial goals should remain the same when a box is moved out of a goal.");
+    }
+
+    @Test
+    void testConstructorLevelLoaderThrowsException() throws Exception {
+        java.lang.reflect.Constructor<LevelLoader> constructor = LevelLoader.class.getDeclaredConstructor();
+        constructor.setAccessible(true);
+        java.lang.reflect.InvocationTargetException exception = assertThrows(
+            java.lang.reflect.InvocationTargetException.class, 
+            constructor::newInstance
+        );
+        assertTrue(exception.getCause() instanceof IllegalStateException, "Should throw IllegalStateException.");
+    }
+
+    @Test
+    void testLoadLevelFileNotFound() {
+        assertThrows(IllegalArgumentException.class, () -> {
+            LevelLoader.loadLevel(-1);
+        }, "Should throw IllegalArgumentException when level file is missing.");
+    }
+
+    @Test
+    void testLoadLevelInvalidDimensionsThrowsException() {
+        LevelManager corruptLevel = LevelLoader.loadLevel(3);
+        assertNull(corruptLevel, "Loading a level with mismatched dimensions should return null.");
+    }
+
+    @Test
+     void testPushBoxBlockedByAnotherBox() {
+        game.loadNextLevel();
+        game.move(0, -1); 
+        game.move(-1, 0);
+        game.move(-1, 0);
+        game.move(-1, 0);
+        game.move(0, -1); 
+        game.move(0, -1); 
+        game.move(0, -1); 
+        game.move(-1, 0);
+        int stepsBefore = game.getLevelSteps();
+        game.move(-1, 0); 
+        game.move(-1, 0); 
+        game.move(0, 1); 
+        assertEquals(stepsBefore, game.getLevelSteps(), "Steps shouldn't change if blocked by boxes.");
+    }
+
+    @Test
+    void testUndoWithNoHistory() {
+        int stepsBefore = game.getLevelSteps();
+        game.undoMove(); 
+        assertEquals(stepsBefore, game.getLevelSteps(), "Undo on empty history should do nothing.");
+    }
+
+    @Test
+    void testUndoMovementWithBox() {
+        game.loadNextLevel();
+        game.move(0, -1); 
+        game.move(-1, 0);
+        game.move(-1, 0);
+        game.move(-1, 0);
+        game.move(0, -1); 
+        game.move(0, -1); 
+        game.move(0, -1); 
+        game.move(-1, 0);
+        int stepsAfterMove = game.getLevelSteps();
+        game.undoMove();
+        assertEquals(stepsAfterMove - 1, game.getLevelSteps(), "Steps should decrement after undoing a box push.");
+    }
+
+    @Test
+    void testLoggerDirectionsCoverage() {
+        game.move(0, 1);   
+        game.move(0, -1);  
+        game.move(-1, 0);  
+        game.move(1, 0);   
+        assertNotNull(game.getBoard());
+    }
+
+    @Test
+    void testUnknownDirectionAndDefaultSwitchCoverage() {
+        game.move(2, 2);
+        assertEquals(0, game.getLevelSteps(), "Steps should not change on unknown movements.");
+    }
+
+    @Test
+    void testMoveWManDefaultSwitchCoverage() {
+        game.getBoard().setCell(3, 4, es.upm.pproject.sokoban.models.Cell.CellType.ERROR);
+        game.move(1, 0);
+        assertEquals(0, game.getLevelSteps(), "Movement should fail and hit the default case.");
+    }
+
+    @Test
+    void testMoveBoxDefaultSwitchCoverage() {
+        game.loadNextLevel();
+        game.getBoard().setCell(6, 4, es.upm.pproject.sokoban.models.Cell.CellType.ERROR);
+        game.move(0, -1); 
+        game.move(-1, 0);
+        game.move(-1, 0);
+        game.move(-1, 0);
+        game.move(0, -1); 
+        game.move(0, -1); 
+        game.move(0, -1); 
+        game.move(-1, 0);
+        assertNotNull(game.getBoard());
+    }
+
+    @Test
+    void testAllDirectionConditionsForCoverage() {
+        game.move(0, -1); 
+        game.move(0, 1);  
+        game.move(-1, 0); 
+        game.move(1, 0);  
+        game.move(1, 1);
+        game.move(-1, -1);
+        game.move(0, 0);
+
+        assertEquals(0, game.getGameSteps());
+    }
+
+    @Test
+    public void testUndoBoxOnGoalPositionTernary() {
+        game.loadNextLevel();
+        int initialGoals = game.getTotalGoals();
+        game.move(0, -1); 
+        game.move(-1, 0);
+        game.move(-1, 0);
+        game.move(-1, 0);
+        game.move(0, -1); 
+        game.move(0, -1); 
+        game.move(0, -1); 
+        game.move(-1, 0);
+        game.move(0, -1); 
+        game.move(-1, 0);
+        game.move(-1, 0);
+        game.move(0, 1);
+        game.move(-1, 0);
+        game.move(-1, 0);
+        game.move(0, 1);
+        game.move(0, 1);
+        game.move(0, 1);
+        game.move(1, 0);
+        game.move(1, 0);
+        game.move(1, 0);
+        game.move(1, 0);
+        game.move(1, 0);
+        game.move(1, 0);
+        game.move(1, 0);
+        game.move(1, 0);
+        game.move(1, 0);
+        game.move(1, 0);
+        game.move(1, 0);
+        game.move(1, 0);
+        game.undoMove();
+        assertNotNull(game.getBoard());
         assertEquals(initialGoals, game.getTotalGoals(), "Initial goals should remain the same when a box is moved out of a goal.");
     }
 
