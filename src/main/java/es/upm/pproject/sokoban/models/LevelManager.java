@@ -11,6 +11,9 @@ import java.util.Collections;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * Manages the state and logic of a Sokoban level.
+ */
 public class LevelManager {
   private static final Logger logger = LoggerFactory.getLogger(LevelManager.class);
   String levelName;
@@ -21,6 +24,15 @@ public class LevelManager {
   Deque<State> movementHistory;
   private static final String STEPSUPDATED = "Warehouse man steps updated: {}";
 
+  /**
+   * Constructs a LevelManager for a specific level, initializing the board,
+   * WarehouseMan, and total goals.
+   * 
+   * @param levelName    name of the level
+   * @param board        board
+   * @param warehouseMan WarehouseMan
+   * @param totalGoals   total number of goals in the level
+   */
   public LevelManager(String levelName, Board board, WarehouseMan warehouseMan, int totalGoals) {
     this.levelName = levelName;
     this.totalGoals = totalGoals;
@@ -30,6 +42,13 @@ public class LevelManager {
     this.movementHistory = new ArrayDeque<>();
   }
 
+  /**
+   * Execute the WarehouseMan movement to the given direction
+   * changing the cell type of the previous position to EMPTY or GOAL_POSITION
+   *
+   * @param dirX x direction
+   * @param dirY y direction
+   */
   private void executeWManMovement(int dirX, int dirY) {
     int oldX = warehouseMan.getX();
     int oldY = warehouseMan.getY();
@@ -44,10 +63,16 @@ public class LevelManager {
     warehouseMan.move(dirX, dirY);
   }
 
-  // This method moves the box to the given position
+  /**
+   * Execute the box movement to the given direction
+   * changing the cell type of the previous position to EMPTY or GOAL_POSITION
+   *
+   * @param x    current x position
+   * @param y    current y position
+   * @param dirX x direction
+   * @param dirY y direction
+   */
   private void executeBoxMovement(int x, int y, int dirX, int dirY) {
-    // Move the box to the new position
-
     if (board.getCell(x, y).isGoal()) {
       totalGoals++;
       logger.info("A box was moved out of a goal position. Remaining goals: {}", totalGoals);
@@ -66,6 +91,16 @@ public class LevelManager {
      */
   }
 
+  /**
+   * Tries to move a box from its current position in the specified direction.
+   * if the destination cell is empty or a goal position, the box is moved
+   * 
+   * @param x    current x position of the box
+   * @param y    current y position of the box
+   * @param dirX x direction
+   * @param dirY y direction
+   * @return true if the box was moved successfully, false if not
+   */
   private boolean moveBox(int x, int y, int dirX, int dirY) {
     int newX = x + dirX;
     int newY = y + dirY;
@@ -88,6 +123,16 @@ public class LevelManager {
     }
   }
 
+  /**
+   * Tries to move the WarehouseMan in the specified direction.
+   * If the destination cell is empty or a goal, it's moved.
+   * If the destination cell has a box, it tries to move the box too.
+   * If the box can be moved both will be moved.
+   *
+   * @param dirX x direction
+   * @param dirY y direction
+   * @return true if it was moved successfully, false if not
+   */
   public boolean moveWMan(int dirX, int dirY) {
     int newX = warehouseMan.getX() + dirX;
     int newY = warehouseMan.getY() + dirY;
@@ -129,6 +174,10 @@ public class LevelManager {
     }
   }
 
+  /**
+   * Undo last player movement, moving the WarehouseMan and the box moved, if
+   * there was one, back.
+   */
   public void undoMovement() {
     State state = getPrevState();
     if (state == null) {
@@ -155,8 +204,14 @@ public class LevelManager {
     }
   }
 
-  // Converts directional movement coordinates into a readable string for the
-  // logger
+  /**
+   * Returns the name of the direction based on the given x and y direction
+   * values.
+   *
+   * @param dirX x direction
+   * @param dirY y direction
+   * @return ("UP", "DOWN", "LEFT", "RIGHT", or "UNKNOWN")
+   */
   private String getDirectionName(int dirX, int dirY) {
     if (dirX == 0 && dirY == -1)
       return "UP";
@@ -170,24 +225,51 @@ public class LevelManager {
   }
 
   // Getters
+
+  /**
+   * Returns the total number of goals in the level.
+   *
+   * @return total number of goals
+   */
   public int getTotalGoals() {
     return totalGoals;
   }
 
+  /**
+   * Returns the total number of steps taken in the level.
+   *
+   * @return total number of steps
+   */
   public int getStepsOnLevel() {
     return stepsOnLevel;
   }
 
+  /**
+   * Returns the board of the level.
+   *
+   * @return Board of the level
+   */
   public Board getBoard() {
     return board;
   }
 
+  /**
+   * Returns the movement history of the level from the oldest to the most recent
+   * movement.
+   *
+   * @return movement history of the level
+   */
   public List<State> getMovementHistory() {
     List<State> hist = new ArrayList<>(movementHistory);
     Collections.reverse(hist);
     return hist;
   }
 
+  /**
+   * Returns last State of the movement history
+   *
+   * @return last State or null if none
+   */
   public State getPrevState() {
     if (movementHistory.peek() == null) {
       logger.info("No movement have been done previously at this level");
@@ -196,6 +278,11 @@ public class LevelManager {
     return movementHistory.pop();
   }
 
+  /**
+   * Returns the name of the level.
+   *
+   * @return name of the level
+   */
   public String getLevelName() {
     return levelName;
   }

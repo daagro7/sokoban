@@ -11,14 +11,25 @@ import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
 
+/**
+ * Class for loading Sokoban levels from level files.
+ */
 class LevelLoader {
   private static final Logger logger = LoggerFactory.getLogger(LevelLoader.class);
 
-  // Private constructor to hide the implicit public one
+  /**
+   * Private constructor to prevent instantiation of the LevelLoader class.
+   */
   private LevelLoader() {
     throw new IllegalStateException("Utility class");
   }
 
+  /**
+   * Reads the level file given the level number
+   *
+   * @param i the level number
+   * @return list of lines of the file, null if error
+   */
   private static List<String> readLevelFiles(int i) {
     List<String> list = null;
     String levelPath = "/levels/level_" + i + ".txt";
@@ -38,6 +49,12 @@ class LevelLoader {
     }
   }
 
+  /**
+   * Loads a level given the level number
+   *
+   * @param num level number
+   * @return LevelManager instance for the level, null if error
+   */
   public static LevelManager loadLevel(int num) {
     List<String> levelLines = null;
     try {

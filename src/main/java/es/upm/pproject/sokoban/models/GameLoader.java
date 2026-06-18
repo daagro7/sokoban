@@ -9,20 +9,35 @@ import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+/**
+ * Class for loading game data from a file.
+ */
 public class GameLoader {
 
   private static final Logger logger = LoggerFactory.getLogger(GameLoader.class);
 
-  // Private constructor to hide the implicit public one
+  /**
+   * Private constructor to prevent instantiation of the GameLoader class.
+   */
   private GameLoader() {
     throw new IllegalStateException("Utility class");
   }
 
+  /**
+   * Class representing the data loaded from a save file.
+   */
   public static class SaveData {
     public int levelNumber;
     public int gamePoints;
     public String movements;
 
+    /**
+     * Constructs a SaveData instance
+     *
+     * @param levelNumber level number
+     * @param gamePoints  game points
+     * @param movements   movements made in the game
+     */
     public SaveData(int levelNumber, int gamePoints, String movements) {
       this.levelNumber = levelNumber;
       this.gamePoints = gamePoints;
@@ -30,6 +45,12 @@ public class GameLoader {
     }
   }
 
+  /**
+   * Loads game data from a specified file path.
+   * 
+   * @param filePath path to the save file
+   * @return SaveData object with the game data, null if error
+   */
   public static SaveData load(String filePath) {
     try {
       Path path = Paths.get(filePath);

@@ -10,11 +10,19 @@ import es.upm.pproject.sokoban.view.Window;
 import javax.swing.JFileChooser;
 import java.io.File;
 
+/**
+ * A GUI for the Sokoban game.
+ */
 public class SokobanGUI implements KeyListener, SokobanUI {
   private Game game;
   private Window window;
   private Panel panel;
 
+  /**
+   * Constructs a SokobanGUI with the specified game.
+   *
+   * @param game game instance to be controlled
+   */
   public SokobanGUI(Game game) {
     this.game = game;
     this.window = new Window();
@@ -23,6 +31,9 @@ public class SokobanGUI implements KeyListener, SokobanUI {
     this.panel.addKeyListener(this);
   }
 
+  /**
+   * Handles the w key input, moving in the menu or in the game.
+   */
   private void handleW() {
     if (window.isMenu()) {
       int currentOption = panel.getSelectedOption();
@@ -35,6 +46,9 @@ public class SokobanGUI implements KeyListener, SokobanUI {
     }
   }
 
+  /**
+   * Handles the s key input, moving in the menu or in the game.
+   */
   private void handleS() {
     if (window.isMenu()) {
       int currentOption = panel.getSelectedOption();
@@ -47,16 +61,25 @@ public class SokobanGUI implements KeyListener, SokobanUI {
     }
   }
 
+  /**
+   * Handles the a key input, moving in the game.
+   */
   private void handleA() {
     if (!window.isMenu())
       game.move(-1, 0);
   }
 
+  /**
+   * Handles the d key input, moving in the game.
+   */
   private void handleD() {
     if (!window.isMenu())
       game.move(1, 0);
   }
 
+  /**
+   * Handles the r key input, restarting the level in the game.
+   */
   private void handleR() {
     if (!window.isMenu()) {
       game.restartLevel();
@@ -64,11 +87,17 @@ public class SokobanGUI implements KeyListener, SokobanUI {
     }
   }
 
+  /**
+   * Handles the u key input, undo to the last move in the game.
+   */
   private void handleU() {
     if (!window.isMenu())
       game.undoMove();
   }
 
+  /**
+   * Handles the esc key input, showing the pause menu
+   */
   private void handleEscape() {
     if (!window.isMenu()) {
       window.newLevel(-1);
@@ -77,6 +106,9 @@ public class SokobanGUI implements KeyListener, SokobanUI {
     }
   }
 
+  /**
+   * Handles the save game, user choose a file to save the game.
+   */
   private void handleSaveGame() {
     JFileChooser fileChooser = new JFileChooser();
     fileChooser.setDialogTitle("Select where to save the game");
@@ -97,6 +129,9 @@ public class SokobanGUI implements KeyListener, SokobanUI {
     }
   }
 
+  /**
+   * Handles the load game, user choose a file to load the game.
+   */
   private void handleLoadGame() {
     JFileChooser fileChooser = new JFileChooser();
     fileChooser.setDialogTitle("Select a game file to load");
@@ -116,6 +151,11 @@ public class SokobanGUI implements KeyListener, SokobanUI {
     }
   }
 
+  /**
+   * Handles the options in the starting menu.
+   *
+   * @param currentOption currently selected option in the menu
+   */
   private void startingMenuOptions(int currentOption) {
     if (currentOption == 0) { // NEW GAME
       game.setGameCompleted(false);
@@ -132,6 +172,11 @@ public class SokobanGUI implements KeyListener, SokobanUI {
     }
   }
 
+  /**
+   * Handles the options in the level menu.
+   *
+   * @param currentOption currently selected option in the menu
+   */
   private void levelMenuOptions(int currentOption) {
     if (currentOption == 0) { // RESUME
       window.newLevel(this.game.getCurrentLevel());
@@ -152,6 +197,10 @@ public class SokobanGUI implements KeyListener, SokobanUI {
     }
   }
 
+  /**
+   * Handles the enter or space key input, executing the selected option in the
+   * menu.
+   */
   private void handleEnterOrSpace() {
     int currentOption = panel.getSelectedOption();
     if (!window.isMenu()) // Skip if not in menu
@@ -172,6 +221,11 @@ public class SokobanGUI implements KeyListener, SokobanUI {
     }
   }
 
+  /**
+   * Handles the key pressed events
+   * 
+   * @param e KeyEvent of the key pressed
+   */
   @Override
   public void keyPressed(KeyEvent e) {
     switch (e.getKeyCode()) {
@@ -203,6 +257,7 @@ public class SokobanGUI implements KeyListener, SokobanUI {
         break;
     }
 
+    // Update the panel and window after each turn if not in menu
     panel.repaint();
     if (!window.isMenu()) {
       window.setStepsOnGame(game.getGameSteps() + game.getLevelSteps());
@@ -230,6 +285,9 @@ public class SokobanGUI implements KeyListener, SokobanUI {
     // Not used in our game. Only needed the use of keyPressed method.
   }
 
+  /**
+   * Starts the Sokoban game loading the menu
+   */
   @Override
   public void start() {
     // There is no need for loop, just start the game

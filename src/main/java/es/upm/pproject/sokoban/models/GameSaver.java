@@ -10,14 +10,25 @@ import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
+/**
+ * Class for saving game data to a file.
+ */
 public class GameSaver {
   private static final Logger logger = LoggerFactory.getLogger(GameSaver.class);
 
-  // Private constructor to hide the implicit public one
+  /**
+   * Private constructor to prevent instantiation of the GameSaver class.
+   */
   private GameSaver() {
     throw new IllegalStateException("Utility class");
   }
 
+  /**
+   * Saves the current game state to a specified file path.
+   * 
+   * @param game     the game to save
+   * @param filePath path to the save file
+   */
   public static void save(Game game, String filePath) {
     Path path = Paths.get(filePath);
     StringBuilder save = new StringBuilder();
