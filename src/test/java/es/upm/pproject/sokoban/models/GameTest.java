@@ -444,7 +444,7 @@ class GameTest {
 
     @Test
     void testGameSaverExceptionCatchBlock() {
-        String invalidPath = "/directory_does_not_exist_1234/_??_invalid_file.sav";
+        String invalidPath = "/directory_does_not_exist_1234/invalid_file.sav";
         GameSaver.save(game, invalidPath);
         assertNotNull(game);
     }
