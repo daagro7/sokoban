@@ -327,4 +327,17 @@ class GameTest {
         assertFalse(testGame.isGameCompleted(), "El juego no debería marcarse como completado al cargar.");
     }
 
+    @Test
+    void testBoardGettersAndToString() {
+        Board board = game.getBoard();
+        assertNotNull(board, "El tablero no debería ser nulo tras cargar el nivel.");
+        int width = board.getWidth();
+        int height = board.getHeigth();
+        assertTrue(width > 0, "El ancho del tablero debe ser mayor que 0.");
+        assertTrue(height > 0, "La altura del tablero debe ser mayor que 0.");
+        String boardString = board.toString();
+        assertNotNull(boardString, "El toString del tablero no debe devolver null.");
+        assertFalse(boardString.isEmpty(), "El string del tablero no debe estar vacío.");
+    }
+
 }
