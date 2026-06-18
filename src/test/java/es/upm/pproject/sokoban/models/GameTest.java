@@ -318,33 +318,33 @@ class GameTest {
     void testLoadGameWithSwitchMovementsAndDefault() throws Exception {
         Game testGame = new Game();
         java.net.URL resource = GameTest.class.getResource("/levels/partida_test.sav");
-        assertNotNull(resource, "El archivo partida_test.sav debe existir en src/test/resources/levels/");
+        assertNotNull(resource, "The partida_test.sav file must exist in src/test/resources/levels/");
         String absolutePath = java.nio.file.Paths.get(resource.toURI()).toString();
         boolean loadResult = testGame.loadGame(absolutePath);
-        assertTrue(loadResult, "La partida debería cargarse correctamente.");
-        assertEquals(2, testGame.getCurrentLevel(), "El nivel cargado debería ser el 2.");
-        assertEquals(10, testGame.getGameSteps(), "Los puntos acumulados del juego deberían ser 10.");
-        assertFalse(testGame.isGameCompleted(), "El juego no debería marcarse como completado al cargar.");
+        assertTrue(loadResult, "The game should load correctly.");
+        assertEquals(2, testGame.getCurrentLevel(), "The loaded level should be 2.");
+        assertEquals(10, testGame.getGameSteps(), "The accumulated game points should be 10.");
+        assertFalse(testGame.isGameCompleted(), "The game should not be marked as completed when loading.");
     }
 
     @Test
     void testBoardGettersAndToString() {
         Board board = game.getBoard();
-        assertNotNull(board, "El tablero no debería ser nulo tras cargar el nivel.");
+        assertNotNull(board, "The board should not be null after loading the level.");
         int width = board.getWidth();
         int height = board.getHeigth();
-        assertTrue(width > 0, "El ancho del tablero debe ser mayor que 0.");
-        assertTrue(height > 0, "La altura del tablero debe ser mayor que 0.");
+        assertTrue(width > 0, "The board width must be greater than 0.");
+        assertTrue(height > 0, "The board height must be greater than 0.");
         String boardString = board.toString();
-        assertNotNull(boardString, "El toString del tablero no debe devolver null.");
-        assertFalse(boardString.isEmpty(), "El string del tablero no debe estar vacío.");
+        assertNotNull(boardString, "The board toString must not return null.");
+        assertFalse(boardString.isEmpty(), "The board string must not be empty.");
     }
 
     @Test
     void testCellToStringDefaultAndErrorCoverage() {
         es.upm.pproject.sokoban.models.Cell errorCell = new es.upm.pproject.sokoban.models.Cell(es.upm.pproject.sokoban.models.Cell.CellType.ERROR);
         String result = errorCell.toString();
-        assertEquals("?", result, "El toString de una celda de tipo ERROR debe retornar '?'");
+        assertEquals("?", result, "The toString of an ERROR cell must return '?'.");
     }
 
     @Test
@@ -355,19 +355,19 @@ class GameTest {
             java.lang.reflect.InvocationTargetException.class, 
             constructor::newInstance
         );
-        assertTrue(exception.getCause() instanceof IllegalStateException, "Debería lanzar IllegalStateException.");
+        assertTrue(exception.getCause() instanceof IllegalStateException, "It should throw IllegalStateException.");
     }
 
     @Test
     void testGameLoaderWithNoMovementsTernaryBranch() throws Exception {
         java.net.URL resource = GameTest.class.getResource("/levels/partida_vacia_test.sav");
-        assertNotNull(resource, "El archivo partida_vacia_test.sav debe existir.");
+        assertNotNull(resource, "The partida_vacia_test.sav file must exist.");
         String absolutePath = java.nio.file.Paths.get(resource.toURI()).toString();
         GameLoader.SaveData saveData = GameLoader.load(absolutePath);
-        assertNotNull(saveData, "Los datos de guardado no deberían ser nulos.");
-        assertEquals(1, saveData.levelNumber, "Debería cargar el nivel 1.");
-        assertEquals(0, saveData.gamePoints, "Debería tener 0 puntos.");
-        assertEquals("", saveData.movements, "La cadena de movimientos debería estar vacía al no existir la tercera línea.");
+        assertNotNull(saveData, "The saved data should not be null.");
+        assertEquals(1, saveData.levelNumber, "It should load level 1.");
+        assertEquals(0, saveData.gamePoints, "It should have 0 points.");
+        assertEquals("", saveData.movements, "The movement string should be empty when the third line does not exist.");
     }
 
     @Test
@@ -378,7 +378,7 @@ class GameTest {
             java.lang.reflect.InvocationTargetException.class, 
             constructor::newInstance
         );
-        assertTrue(exception.getCause() instanceof IllegalStateException, "Debería lanzar IllegalStateException.");
+        assertTrue(exception.getCause() instanceof IllegalStateException, "It should throw IllegalStateException.");
     }
 
     @Test
@@ -455,18 +455,18 @@ class GameTest {
         assertEquals(0, player.getX());
         assertEquals(0, player.getY());
         player.setPosition(5, 8);
-        assertEquals(5, player.getX(), "La coordenada X debería haber cambiado a 5.");
-        assertEquals(8, player.getY(), "La coordenada Y debería haber cambiado a 8.");
+        assertEquals(5, player.getX(), "The X coordinate should have changed to 5.");
+        assertEquals(8, player.getY(), "The Y coordinate should have changed to 8.");
     }
 
     @Test
     void testLevelLoaderNotEnoughLinesLessThanThree() {
-        assertNull(LevelLoader.loadLevel(91), "Debería retornar null por falta de líneas básicas.");
+        assertNull(LevelLoader.loadLevel(91), "It should return null due to missing basic lines.");
     }
 
     @Test
     void testLevelLoaderNotEnoughLinesForHeight() {
-        assertNull(LevelLoader.loadLevel(92), "Debería retornar null porque no hay líneas suficientes para la altura.");
+        assertNull(LevelLoader.loadLevel(92), "It should return null because there are not enough lines for the height.");
     }
 
    /*  @Test    Da fallo porque el método System.exit(1) termina la ejecución del test, no se puede capturar con assertThrows.
@@ -482,27 +482,27 @@ class GameTest {
     void testLevelLoaderFileNotFoundIOException() {
         assertThrows(IllegalArgumentException.class, () -> {
             LevelLoader.loadLevel(999);
-        }, "Cargar un nivel inexistente debe lanzar IllegalArgumentException.");
+        }, "Loading a non-existent level must throw IllegalArgumentException.");
     }
 
     @Test
     void testLevelLoaderInvalidCharacterCaseDefault() {
-        assertNull(LevelLoader.loadLevel(94), "Debería retornar null al contener caracteres inválidos.");
+        assertNull(LevelLoader.loadLevel(94), "It should return null when invalid characters are present.");
     }
 
     @Test
     void testLevelLoaderIndexOutOfBoundsExceptionDimensions() {
-        assertNull(LevelLoader.loadLevel(95), "Debería retornar null al lanzar IndexOutOfBoundsException.");
+        assertNull(LevelLoader.loadLevel(95), "It should return null when IndexOutOfBoundsException is thrown.");
     }
 
     @Test
     void testLevelLoaderBoxCountNotEqualsTotalGoals() {
-        assertNull(LevelLoader.loadLevel(96), "Debería retornar null si el número de cajas y metas no coincide.");
+        assertNull(LevelLoader.loadLevel(96), "It should return null if the number of boxes and goals does not match.");
     }
 
     @Test
     void testLevelLoaderNoBoxesOrGoalsFound() {
-        assertNull(LevelLoader.loadLevel(97), "Debería retornar null si no hay cajas ni metas en el mapa.");
+        assertNull(LevelLoader.loadLevel(97), "It should return null if there are no boxes or goals on the map.");
     }
 
 
