@@ -33,12 +33,12 @@ public class Panel extends JPanel {
     private static final String MENUSTRING = "MENU";
     private static final String[] PAUSEMENUSTRING = { "RESUME", "SAVE GAME", "RESTART LEVEL", "UNDO MOVEMENT", "QUIT" };
 
-    private Image wallImg;
-    private Image boxImg;
-    private Image boxGoalImg;
-    private Image floorImg;
-    private Image playerImg;
-    private Image goalImg;
+    private transient Image wallImg;
+    private transient Image boxImg;
+    private transient Image boxGoalImg;
+    private transient Image floorImg;
+    private transient Image playerImg;
+    private transient Image goalImg;
 
     /**
      * Constructs a Panel for the Sokoban game.
