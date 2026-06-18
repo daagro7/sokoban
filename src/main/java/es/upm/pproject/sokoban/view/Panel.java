@@ -25,12 +25,22 @@ public class Panel extends JPanel {
     private static final String MENUSTRING = "MENU";
     private static final String[] PAUSEMENUSTRING = { "RESUME", "SAVE GAME", "RESTART LEVEL", "UNDO MOVEMENT", "QUIT" };
 
+    /**
+     * Constructs a Panel for the Sokoban game.
+     *
+     * @param window window of the game
+     */
     public Panel(Window window) {
         this.window = window;
         this.setFocusable(true);
         completed = false;
     }
 
+    /**
+     * Draws a component based on the level panel
+     *
+     * @param g graphics context
+     */
     @Override
     protected void paintComponent(Graphics g) {
         super.paintComponent(g);
@@ -48,6 +58,11 @@ public class Panel extends JPanel {
         }
     }
 
+    /**
+     * Draws the game board with the game elements.
+     *
+     * @param g graphics context
+     */
     public void drawBoard(Graphics g) {
         for (int heigth = 0; heigth < board.getHeigth(); heigth++) {
             for (int width = 0; width < board.getWidth(); width++) {
@@ -91,6 +106,11 @@ public class Panel extends JPanel {
         }
     }
 
+    /**
+     * Draws the starting menu with its options.
+     *
+     * @param g graphics context
+     */
     public void drawStartingMenu(Graphics g) {
         // Menu title
         // Center the text on the option box
@@ -134,6 +154,11 @@ public class Panel extends JPanel {
         }
     }
 
+    /**
+     * Draws the pause menu with its options.
+     *
+     * @param g graphics context
+     */
     public void drawPauseMenu(Graphics g) {
         // Menu title
         // Center the text on the option box
@@ -177,6 +202,11 @@ public class Panel extends JPanel {
         }
     }
 
+    /**
+     * Draws the new level or final congratulations panel.
+     *
+     * @param g graphics context
+     */
     public void drawNewLevelPanel(Graphics g) {
         // Center the text
         g.setColor(Color.BLACK);
@@ -233,11 +263,23 @@ public class Panel extends JPanel {
         g.drawString(textPress, centeredX, currentY);
     }
 
+    // Getters/Setters
+
+    /**
+     * Sets the game as completed or not completed.
+     *
+     * @param completed true if completed, false if not
+     */
     public void setCompleted(boolean completed) {
         this.completed = completed;
     }
 
-    // Getters/Setters
+    /**
+     * Sets the panel to show the board or menu.
+     *
+     * @param newBoard board to display, null for menus
+     */
+
     public void setPanel(Board newBoard) {
         int heigthPanel;
         int widthPanel;
@@ -266,14 +308,29 @@ public class Panel extends JPanel {
         this.repaint();
     }
 
+    /**
+     * Returns the menu current selected option.
+     *
+     * @return current selected option index
+     */
     public int getSelectedOption() {
         return this.selectedOption;
     }
 
+    /**
+     * Sets the menu current selected option.
+     *
+     * @param option index of the option to select
+     */
     public void setSelectedOption(int option) {
         this.selectedOption = option;
     }
 
+    /**
+     * Returns the number of options in the current menu.
+     *
+     * @return number of options
+     */
     public int getNumberOptions() {
         return window.getLevelPanel() == 0 ? STARTINGMENUOPTIONS.length : PAUSEMENUSTRING.length;
     }

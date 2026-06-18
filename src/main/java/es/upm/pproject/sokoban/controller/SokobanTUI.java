@@ -6,14 +6,28 @@ import org.slf4j.LoggerFactory;
 
 import es.upm.pproject.sokoban.models.Game;
 
+/**
+ * A TUI for the Sokoban game.
+ */
 public class SokobanTUI implements SokobanUI {
   private static final Logger logger = LoggerFactory.getLogger(SokobanTUI.class);
   private Game game;
 
+  /**
+   * Constructs a SokobanTUI with the specified game.
+   *
+   * @param game game instance to be controlled
+   */
   public SokobanTUI(Game game) {
     this.game = game;
   }
 
+  /**
+   * Processes input from the keyboard and does it's corresponding action in the
+   * game.
+   *
+   * @param input character input
+   */
   private void keyboardInput(char input) {
     switch (input) {
       case 'w':
@@ -40,10 +54,14 @@ public class SokobanTUI implements SokobanUI {
     }
   }
 
+  /**
+   * TUI game loop that handles user input and game state until all levels are
+   * completed.
+   */
   public void loop() {
     Scanner scanner = new Scanner(System.in);
     int currentLevel = game.getCurrentLevel();
-    while (currentLevel < 2) {
+    while (currentLevel <= 1) {
       logger.info("Loading level {}...", currentLevel);
       logger.info("-------------------------------");
       game.loadCurrentLevel();
@@ -69,6 +87,9 @@ public class SokobanTUI implements SokobanUI {
     scanner.close();
   }
 
+  /**
+   * Starts the TUI game loop.
+   */
   @Override
   public void start() {
     loop();
