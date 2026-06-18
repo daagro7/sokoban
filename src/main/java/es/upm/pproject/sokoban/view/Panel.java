@@ -13,6 +13,10 @@ import java.awt.Graphics;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.imageio.ImageIO;
+import java.awt.Image;
+import java.io.IOException;
+
 public class Panel extends JPanel {
 
     private static final Logger logger = LoggerFactory.getLogger(Panel.class);
@@ -29,6 +33,13 @@ public class Panel extends JPanel {
     private static final String MENUSTRING = "MENU";
     private static final String[] PAUSEMENUSTRING = { "RESUME", "SAVE GAME", "RESTART LEVEL", "UNDO MOVEMENT", "QUIT" };
 
+    private Image wallImg;
+    private Image boxImg;
+    private Image boxGoalImg;
+    private Image floorImg;
+    private Image playerImg;
+    private Image goalImg;
+
     /**
      * Constructs a Panel for the Sokoban game.
      *
@@ -39,6 +50,23 @@ public class Panel extends JPanel {
         this.setFocusable(true);
         completed = false;
         logger.info("Sokoban view Panel initialized successfully.");
+        loadImages();
+    }
+
+    /**
+     * Loads the images for the game elements.
+     */
+    private void loadImages() {
+        try {
+            wallImg = ImageIO.read(getClass().getResourceAsStream("/assets/wall.png"));
+            boxImg = ImageIO.read(getClass().getResourceAsStream("/assets/box.png"));
+            playerImg = ImageIO.read(getClass().getResourceAsStream("/assets/player.png"));
+            goalImg = ImageIO.read(getClass().getResourceAsStream("/assets/goal.png"));
+            floorImg = ImageIO.read(getClass().getResourceAsStream("/assets/floor.png"));
+            boxGoalImg = ImageIO.read(getClass().getResourceAsStream("/assets/boxGoal.png"));
+        } catch (IOException | IllegalArgumentException e) {
+            logger.error("Error loading images: {}", e.getMessage());
+        }
     }
 
     /**
@@ -84,33 +112,27 @@ public class Panel extends JPanel {
 
                 switch (cell.getCellType()) {
                     case WALL: // Wall
-                        g.setColor(Color.DARK_GRAY);
-                        g.fillRect(x, y, CELL_SIZE, CELL_SIZE);
+                        g.drawImage(wallImg, x, y, CELL_SIZE, CELL_SIZE, null);
                         break;
                     case BOX: // Box
+                        g.drawImage(floorImg, x, y, CELL_SIZE, CELL_SIZE, null);
                         if (cell.isGoal()) { // Efect if box is in goal position
-                            g.setColor(new Color(210, 145, 60));
+                            g.drawImage(boxGoalImg, x, y, CELL_SIZE, CELL_SIZE, null);
                         } else {
-                            g.setColor(new Color(139, 69, 19));
+                            g.drawImage(boxImg, x, y, CELL_SIZE, CELL_SIZE, null);
                         }
-                        g.fillRect(x, y, CELL_SIZE, CELL_SIZE);
+
                         break;
                     case GOAL_POSITION: // Goal
-                        g.setColor(Color.RED);
-                        g.fillOval(x + CELL_SIZE / 4, y + CELL_SIZE / 4, CELL_SIZE / 2, CELL_SIZE / 2);
+                        g.drawImage(goalImg, x, y, CELL_SIZE, CELL_SIZE, null);
                         break;
                     case WAREHOUSE_MAN: // Player
-                        g.setColor(Color.BLUE);
-                        g.fillOval(x + 5, y + 5, CELL_SIZE - 10, CELL_SIZE - 10);
+                        g.drawImage(cell.isGoal() ? goalImg : floorImg, x, y, CELL_SIZE, CELL_SIZE, null);
+                        g.drawImage(playerImg, x, y, CELL_SIZE, CELL_SIZE, null);
                         break;
                     default:
+                        g.drawImage(floorImg, x, y, CELL_SIZE, CELL_SIZE, null);
                         break;
-                }
-
-                if (cell.getCellType() != Cell.CellType.WALL) {
-                    // Draw the lines that separates every cell
-                    g.setColor(Color.BLACK);
-                    g.drawRect(x, y, CELL_SIZE, CELL_SIZE);
                 }
             }
         }
