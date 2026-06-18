@@ -370,4 +370,84 @@ class GameTest {
         assertEquals("", saveData.movements, "La cadena de movimientos debería estar vacía al no existir la tercera línea.");
     }
 
+    @Test
+    void testConstructorGameSaverThrowsException() throws Exception {
+        java.lang.reflect.Constructor<GameSaver> constructor = GameSaver.class.getDeclaredConstructor();
+        constructor.setAccessible(true);
+        java.lang.reflect.InvocationTargetException exception = assertThrows(
+            java.lang.reflect.InvocationTargetException.class, 
+            constructor::newInstance
+        );
+        assertTrue(exception.getCause() instanceof IllegalStateException, "Debería lanzar IllegalStateException.");
+    }
+
+    @Test
+    public void testGameSaverMovementUP() throws Exception {
+        game.setCurrentLevel(1);
+        game.loadCurrentLevel();
+        game.move(0, -1); 
+
+        java.nio.file.Path tempFile = java.nio.file.Files.createTempFile("save_up", ".sav");
+        try {
+            game.saveGame(tempFile.toAbsolutePath().toString());
+            assertTrue(java.nio.file.Files.exists(tempFile));
+        } finally {
+            java.nio.file.Files.deleteIfExists(tempFile);
+        }
+    }
+
+    @Test
+    public void testGameSaverMovementDOWN() throws Exception {
+        game.setCurrentLevel(1);
+        game.loadCurrentLevel();
+        game.move(0, 1); 
+
+        java.nio.file.Path tempFile = java.nio.file.Files.createTempFile("save_down", ".sav");
+        try {
+            game.saveGame(tempFile.toAbsolutePath().toString());
+            assertTrue(java.nio.file.Files.exists(tempFile));
+        } finally {
+            java.nio.file.Files.deleteIfExists(tempFile);
+        }
+    }
+
+    @Test
+    public void testGameSaverMovementLEFT() throws Exception {
+        game.setCurrentLevel(1);
+        game.loadCurrentLevel();
+        game.move(1, 0); 
+        game.move(-1, 0); 
+
+        java.nio.file.Path tempFile = java.nio.file.Files.createTempFile("save_left", ".sav");
+        try {
+            game.saveGame(tempFile.toAbsolutePath().toString());
+            assertTrue(java.nio.file.Files.exists(tempFile));
+        } finally {
+            java.nio.file.Files.deleteIfExists(tempFile);
+        }
+    }
+
+    @Test
+    public void testGameSaverMovementRIGHT() throws Exception {
+        game.setCurrentLevel(1);
+        game.loadCurrentLevel();
+        game.move(1, 0); 
+
+        java.nio.file.Path tempFile = java.nio.file.Files.createTempFile("save_right", ".sav");
+        try {
+            game.saveGame(tempFile.toAbsolutePath().toString());
+            assertTrue(java.nio.file.Files.exists(tempFile));
+        } finally {
+            java.nio.file.Files.deleteIfExists(tempFile);
+        }
+    }
+
+    @Test
+    public void testGameSaverExceptionCatchBlock() {
+        String invalidPath = "/directory_does_not_exist_1234/_??_invalid_file.sav";
+        GameSaver.save(game, invalidPath);
+        assertNotNull(game);
+    }
+
+
 }
