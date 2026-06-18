@@ -106,6 +106,7 @@ import org.junit.jupiter.api.Test;
         game.move(1, 0);
         game.move(0, -1);
         assertTrue(game.levelCompleted(), "Level should be complete.");
+        assertTrue(game.getLastLevelSteps() > 0, "Last level steps should be recorded.");
     }
 
 }

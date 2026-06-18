@@ -246,7 +246,7 @@ class GameTest {
     }
 
     @Test
-    public void testUndoBoxOnGoalPositionTernary() {
+    void testUndoBoxOnGoalPositionTernary() {
         game.loadNextLevel();
         int initialGoals = game.getTotalGoals();
         game.move(0, -1); 
@@ -281,6 +281,50 @@ class GameTest {
         game.undoMove();
         assertNotNull(game.getBoard());
         assertEquals(initialGoals, game.getTotalGoals(), "Initial goals should remain the same when a box is moved out of a goal.");
+    }
+
+    @Test
+    void testGameGettersSettersAndStatus() {
+        Game testGame = new Game();
+
+        // 1. Probamos los setters y getters básicos marcados en rojo
+        testGame.setCurrentLevel(4);
+        assertEquals(4, testGame.getCurrentLevel());
+
+        testGame.setStepsOnGame(150);
+        assertEquals(150, testGame.getGameSteps());
+
+        testGame.setGameCompleted(true);
+        assertTrue(testGame.isGameCompleted());
+    }
+
+   @Test
+    void testGameCompletedWhenNoMoreLevels() throws Exception {
+        while (game.loadNextLevel()) {
+        }
+        java.lang.reflect.Field fieldManager = Game.class.getDeclaredField("levelManager");
+        fieldManager.setAccessible(true);
+        LevelManager lm = (LevelManager) fieldManager.get(game);
+        if (lm != null) {
+            java.lang.reflect.Field fieldGoals = LevelManager.class.getDeclaredField("totalGoals");
+            fieldGoals.setAccessible(true);
+            fieldGoals.set(lm, 0);
+            assertTrue(game.levelCompleted());
+            assertTrue(game.isGameCompleted(), "The game should be fully completed.");
+        }
+    }
+
+    @Test
+    void testLoadGameWithSwitchMovementsAndDefault() throws Exception {
+        Game testGame = new Game();
+        java.net.URL resource = GameTest.class.getResource("/levels/partida_test.sav");
+        assertNotNull(resource, "El archivo partida_test.sav debe existir en src/test/resources/levels/");
+        String absolutePath = java.nio.file.Paths.get(resource.toURI()).toString();
+        boolean loadResult = testGame.loadGame(absolutePath);
+        assertTrue(loadResult, "La partida debería cargarse correctamente.");
+        assertEquals(2, testGame.getCurrentLevel(), "El nivel cargado debería ser el 2.");
+        assertEquals(10, testGame.getGameSteps(), "Los puntos acumulados del juego deberían ser 10.");
+        assertFalse(testGame.isGameCompleted(), "El juego no debería marcarse como completado al cargar.");
     }
 
 }
