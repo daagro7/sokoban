@@ -347,5 +347,27 @@ class GameTest {
         assertEquals("?", result, "El toString de una celda de tipo ERROR debe retornar '?'");
     }
 
+    @Test
+    void testConstructorGameLoaderThrowsException() throws Exception {
+        java.lang.reflect.Constructor<GameLoader> constructor = GameLoader.class.getDeclaredConstructor();
+        constructor.setAccessible(true);
+        java.lang.reflect.InvocationTargetException exception = assertThrows(
+            java.lang.reflect.InvocationTargetException.class, 
+            constructor::newInstance
+        );
+        assertTrue(exception.getCause() instanceof IllegalStateException, "Debería lanzar IllegalStateException.");
+    }
+
+    @Test
+    void testGameLoaderWithNoMovementsTernaryBranch() throws Exception {
+        java.net.URL resource = GameTest.class.getResource("/levels/partida_vacia_test.sav");
+        assertNotNull(resource, "El archivo partida_vacia_test.sav debe existir.");
+        String absolutePath = java.nio.file.Paths.get(resource.toURI()).toString();
+        GameLoader.SaveData saveData = GameLoader.load(absolutePath);
+        assertNotNull(saveData, "Los datos de guardado no deberían ser nulos.");
+        assertEquals(1, saveData.levelNumber, "Debería cargar el nivel 1.");
+        assertEquals(0, saveData.gamePoints, "Debería tener 0 puntos.");
+        assertEquals("", saveData.movements, "La cadena de movimientos debería estar vacía al no existir la tercera línea.");
+    }
 
 }
